@@ -695,34 +695,6 @@ AddEventHandler("inventory:client:DropItemAnim", function()
     ClearPedTasks(ped)
 end)
 
---[[RegisterNetEvent("inventory:client:ShowId")
-AddEventHandler("inventory:client:ShowId", function(sourceId, citizenid, character)
-    local sourcePos = GetEntityCoords(GetPlayerPed(GetPlayerFromServerId(sourceId)), false)
-    local pos = GetEntityCoords(GetPlayerPed(-1), false)
-    if (GetDistanceBetweenCoords(pos.x, pos.y, pos.z, sourcePos.x, sourcePos.y, sourcePos.z, true) < 2.0) then
-        local gender = "Man"
-        if character.gender == 1 then
-            gender = "Vrouw"
-        end
-        TriggerEvent('chat:addMessage', {
-            template = '<div class="chat-message advert"><div class="chat-message-body"><strong>{0}:</strong><br><br> <strong>CSN:</strong> {1} <br><strong>First Name:</strong> {2} <br><strong>Last Name:</strong> {3} <br><strong>Birth Date:</strong> {4} <br><strong>Sex:</strong> {5} <br><strong>Nationality:</strong> {6}<br><strong>Job: </strong>{7}</div></div>',
-            args = {'ID-Card', character.citizenid, character.firstname, character.lastname, character.birthdate, gender, character.nationality,character.job}
-        })
-    end
-end)
-
-RegisterNetEvent("inventory:client:ShowDriverLicense")
-AddEventHandler("inventory:client:ShowDriverLicense", function(sourceId, citizenid, character)
-    local sourcePos = GetEntityCoords(GetPlayerPed(GetPlayerFromServerId(sourceId)), false)
-    local pos = GetEntityCoords(GetPlayerPed(-1), false)
-    if (GetDistanceBetweenCoords(pos.x, pos.y, pos.z, sourcePos.x, sourcePos.y, sourcePos.z, true) < 2.0) then
-        TriggerEvent('chat:addMessage', {
-            template = '<div class="chat-message advert"><div class="chat-message-body"><strong>{0}:</strong><br><br> <strong>First Name:</strong> {1} <br><strong>Last Name:</strong> {2} <br><strong>Birth Date:</strong> {3} <br><strong>Licenses:</strong> {4}</div></div>',
-            args = {'Drivers license', character.firstname, character.lastname, character.birthdate, character.type}
-        })
-    end
-end)]]
-
 RegisterNetEvent("inventory:client:SetCurrentStash")
 AddEventHandler("inventory:client:SetCurrentStash", function(stash)
     CurrentStash = stash
