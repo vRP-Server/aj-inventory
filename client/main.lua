@@ -491,7 +491,7 @@ AddEventHandler("inventory:client:UseWeapon", function(weaponData, shootbool)
     local weaponName = tostring(weaponData.name)
     if currentWeapon == weaponName then
         SetCurrentPedWeapon(ped, GetHashKey("WEAPON_UNARMED"), true)
-        --RemoveAllPedWeapons(ped, true)
+        RemoveAllPedWeapons(ped, true)
         TriggerEvent('weapons:client:SetCurrentWeapon', nil, shootbool)
         currentWeapon = nil
     elseif weaponName == "weapon_stickybomb" then

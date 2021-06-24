@@ -1,6 +1,6 @@
-## ax-inventory
+## aj-inventory
  
-Make sure to rename qb-inventory to ax-inventory in qb-shops fxmanifest.lua or it may not work
+Make sure to rename qb-inventory to aj-inventory in qb-shops fxmanifest.lua or it may not work
 
 ![20210618181230_1](https://user-images.githubusercontent.com/66404074/122620901-21f4dd00-d062-11eb-95a7-1f8c64af06ed.jpg)
 ![20210618181219_1](https://user-images.githubusercontent.com/66404074/122620907-24573700-d062-11eb-844e-3867fa1175eb.jpg)
