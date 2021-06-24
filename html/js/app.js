@@ -10,11 +10,8 @@ var otherLabel = "";
 
 var ClickedItemData = {};
 
-var SelectedAttachment = null;
 var AttachmentScreenActive = false;
 var ControlPressed = false;
-var disableRightMouse = false;
-var selectedItem = null;
 
 var IsDragging = false;
 
@@ -43,10 +40,10 @@ $(document).on('keyup', function(){
 $(document).on("mouseenter", ".item-slot", function(e){
     e.preventDefault();
     if ($(this).data("item") != null) {
-        $(".ply-iteminfo-container").fadeIn(150);
+        $(".ply-iteminfo-container").fadeIn(500);
         FormatItemInfo($(this).data("item"));
     } else {
-        $(".ply-iteminfo-container").fadeOut(100);
+        $(".ply-iteminfo-container").fadeOut(500);
     }
 });
 
@@ -127,7 +124,7 @@ $(document).on("click", ".item-slot", function(e){
             if ((ItemData.name).split("_")[0] == "weapon") {
                 if (!$("#weapon-attachments").length) {
                     // if (ItemData.info.attachments !== null && ItemData.info.attachments !== undefined && ItemData.info.attachments.length > 0) {
-                    $(".inv-options-list").append('<center><div style="background-color: #5285b6;" class="inv-option-item" id="weapon-attachments"><p>ATTACHMENTS</p></div></center>');
+                    $(".inv-options-list").append('<center><div style="background-color: #466887;" class="inv-option-item" id="weapon-attachments"><p>ATTACHMENTS</p></div></center>');
                     $("#weapon-attachments").hide().fadeIn(250);
                     ClickedItemData = ItemData;
                     // }
@@ -168,9 +165,7 @@ $(document).on("click", ".item-slot", function(e){
 $(document).on('click', '.weapon-attachments-back', function(e){
     e.preventDefault();
     $("#qbus-inventory").css({"display":"block"});
-    $("#qbus-inventory").animate({
-        left: 0+"vw"
-    }, 200);
+    $("#qbus-inventory").animate({left: 0+"vw"}, 200);
     $(".weapon-attachments-container").animate({
         left: -100+"vw"
     }, 200, function(){
@@ -180,7 +175,7 @@ $(document).on('click', '.weapon-attachments-back', function(e){
 });
 
 function FormatAttachmentInfo(data) {
-    $.post("http://ax-inventory/GetWeaponData", JSON.stringify({
+    $.post("http://aj-inventory/GetWeaponData", JSON.stringify({
         weapon: data.name,
         ItemData: ClickedItemData
     }), function(data){
@@ -246,7 +241,7 @@ function handleAttachmentDrag() {
         accept: ".weapon-attachment",
         hoverClass: 'weapon-attachments-remove-hover',
         drop: function(event, ui) {
-            $.post('http://ax-inventory/RemoveAttachment', JSON.stringify({
+            $.post('http://aj-inventory/RemoveAttachment', JSON.stringify({
                 AttachmentData: AttachmentDraggingData,
                 WeaponData: ClickedItemData,
             }), function(data){
@@ -281,9 +276,7 @@ $(document).on('click', '#weapon-attachments', function(e){
     e.preventDefault();
     if (!Inventory.IsWeaponBlocked(ClickedItemData.name)) {
         $(".weapon-attachments-container").css({"display":"block"})
-        $("#qbus-inventory").animate({
-            left: 100+"vw"
-        }, 200, function(){
+        $("#qbus-inventory").animate({left: 100+"vw"}, 200, function(){
             $("#qbus-inventory").css({"display":"none"})
         });
         $(".weapon-attachments-container").animate({
@@ -292,7 +285,7 @@ $(document).on('click', '#weapon-attachments', function(e){
         AttachmentScreenActive = true;
         FormatAttachmentInfo(ClickedItemData);    
     } else {
-        $.post('http://ax-inventory/Notify', JSON.stringify({
+        $.post('http://aj-inventory/Notify', JSON.stringify({
             message: "Attachments are unavailable for this gun.",
             type: "error"
         }))
@@ -493,7 +486,7 @@ function handleDragDrop() {
                 if (fromData.shouldClose) {
                     Inventory.Close();
                 }
-                $.post("http://ax-inventory/UseItem", JSON.stringify({
+                $.post("http://aj-inventory/UseItem", JSON.stringify({
                     inventory: fromInventory,
                     item: fromData,
                 }));
@@ -510,7 +503,7 @@ function handleDragDrop() {
             fromInventory = ui.draggable.parent().attr("data-inventory");
             amount = $("#item-amount").val();
             if(fromData.amount > 0) {
-                $.post("http://ax-inventory/GiveItem", JSON.stringify({
+                $.post("http://aj-inventory/GiveItem", JSON.stringify({
                     inventory: fromInventory,
                     item: fromData,
                     amount: parseInt(amount),
@@ -519,6 +512,18 @@ function handleDragDrop() {
             }
         }
     });
+
+    $("#item-close").droppable({
+        hoverClass: 'button-hover',
+        drop: function(event, ui) {
+            setTimeout(function(){
+                IsDragging = false;
+            }, 300)
+            $.post("http://aj-inventory/CloseInventory", JSON.stringify({}));
+            Inventory.Close();
+        }
+    });
+
     $("#item-drop").droppable({
         hoverClass: 'item-slot-hoverClass',
         drop: function(event, ui) {
@@ -530,7 +535,7 @@ function handleDragDrop() {
             amount = $("#item-amount").val();
             if (amount == 0) {amount=fromData.amount}
             $(this).css("background", "rgba(35,35,35, 0.7");
-            $.post("http://ax-inventory/DropItem", JSON.stringify({
+            $.post("http://aj-inventory/DropItem", JSON.stringify({
                 inventory: fromInventory,
                 item: fromData,
                 amount: parseInt(amount),
@@ -641,13 +646,13 @@ var combineslotData = null;
 $(document).on('click', '.CombineItem', function(e){
     e.preventDefault();
     if (combineslotData.toData.combinable.anim != null) {
-        $.post('http://ax-inventory/combineWithAnim', JSON.stringify({
+        $.post('http://aj-inventory/combineWithAnim', JSON.stringify({
             combineData: combineslotData.toData.combinable,
             usedItem: combineslotData.toData.name,
             requiredItem: combineslotData.fromData.name
         }))
     } else {
-        $.post('http://ax-inventory/combineItem', JSON.stringify({
+        $.post('http://aj-inventory/combineItem', JSON.stringify({
             reward: combineslotData.toData.combinable.reward,
             toItem: combineslotData.toData.name,
             fromItem: combineslotData.fromData.name
@@ -691,7 +696,7 @@ function optionSwitch($fromSlot, $toSlot, $fromInv, $toInv, $toAmount, toData, f
         $fromInv.find("[data-slot=" + $fromSlot + "]").html('<div class="item-slot-img"><img src="images/' + toData.image + '" alt="' + toData.name + '" /></div><div class="item-slot-amount"><p>' + toData.amount + ' (' + ((toData.weight * toData.amount) / 1000).toFixed(1) + ')</p></div><div class="item-slot-label"><p>' + toData.label + '</p></div>');
     }
 
-    $.post("http://ax-inventory/SetInventoryData", JSON.stringify({
+    $.post("http://aj-inventory/SetInventoryData", JSON.stringify({
         fromInventory: $fromInv.attr("data-inventory"),
         toInventory: $toInv.attr("data-inventory"),
         fromSlot: $fromSlot,
@@ -903,8 +908,8 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                     }
                 }    
             }
-            $.post("http://ax-inventory/PlayDropSound", JSON.stringify({}));
-            $.post("http://ax-inventory/SetInventoryData", JSON.stringify({
+            $.post("http://aj-inventory/PlayDropSound", JSON.stringify({}));
+            $.post("http://aj-inventory/SetInventoryData", JSON.stringify({
                 fromInventory: $fromInv.attr("data-inventory"),
                 toInventory: $toInv.attr("data-inventory"),
                 fromSlot: $fromSlot,
@@ -914,7 +919,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
         } else {
             if (fromData.amount == $toAmount) {
                 if (toData != undefined && toData.combinable != null && isItemAllowed(fromData.name, toData.combinable.accept)) {
-                    $.post('http://ax-inventory/getCombineItem', JSON.stringify({item: toData.combinable.reward}), function(item){
+                    $.post('http://aj-inventory/getCombineItem', JSON.stringify({item: toData.combinable.reward}), function(item){
                         $('.combine-option-text').html("<p>If you combine these items you get: <b>"+item.label+"</b></p>");
                     })
                     $(".combine-option-container").fadeIn(100);
@@ -1026,7 +1031,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                         }
                     }
 
-                    $.post("http://ax-inventory/SetInventoryData", JSON.stringify({
+                    $.post("http://aj-inventory/SetInventoryData", JSON.stringify({
                         fromInventory: $fromInv.attr("data-inventory"),
                         toInventory: $toInv.attr("data-inventory"),
                         fromSlot: $fromSlot,
@@ -1048,7 +1053,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                         $fromInv.find("[data-slot=" + $fromSlot + "]").html('<div class="item-slot-img"></div><div class="item-slot-label"><p>&nbsp;</p></div>');
                     }
 
-                    $.post("http://ax-inventory/SetInventoryData", JSON.stringify({
+                    $.post("http://aj-inventory/SetInventoryData", JSON.stringify({
                         fromInventory: $fromInv.attr("data-inventory"),
                         toInventory: $toInv.attr("data-inventory"),
                         fromSlot: $fromSlot,
@@ -1056,7 +1061,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                         fromAmount: $toAmount,
                     }));
                 }
-                $.post("http://ax-inventory/PlayDropSound", JSON.stringify({}));
+                $.post("http://aj-inventory/PlayDropSound", JSON.stringify({}));
             } else if(fromData.amount > $toAmount && (toData == undefined || toData == null)) {
                 var newDataTo = [];
                 newDataTo.name = fromData.name;
@@ -1183,8 +1188,8 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                         }
                     }
                 }
-                $.post("http://ax-inventory/PlayDropSound", JSON.stringify({}));
-                $.post("http://ax-inventory/SetInventoryData", JSON.stringify({
+                $.post("http://aj-inventory/PlayDropSound", JSON.stringify({}));
+                $.post("http://aj-inventory/SetInventoryData", JSON.stringify({
                     fromInventory: $fromInv.attr("data-inventory"),
                     toInventory: $toInv.attr("data-inventory"),
                     fromSlot: $fromSlot,
@@ -1216,7 +1221,7 @@ function InventoryError($elinv, $elslot) {
     setTimeout(function() {
         $elinv.find("[data-slot=" + $elslot + "]").css("background", "rgba(255, 255, 255, 0.03)");
     }, 500)
-    $.post("http://ax-inventory/PlayDropFail", JSON.stringify({}));
+    $.post("http://aj-inventory/PlayDropFail", JSON.stringify({}));
 }
 
 var requiredItemOpen = false;
@@ -1231,7 +1236,7 @@ var requiredItemOpen = false;
     Inventory.dropmaxweight = 500000
 
     Inventory.Error = function() {
-        $.post("http://ax-inventory/PlayDropFail", JSON.stringify({}));
+        $.post("http://aj-inventory/PlayDropFail", JSON.stringify({}));
     }
 
     Inventory.IsWeaponBlocked = function(WeaponName) {
@@ -1329,7 +1334,7 @@ var requiredItemOpen = false;
             requiredItemOpen = false;
         }
 
-        $("#qbus-inventory").fadeIn(1500);
+        $("#qbus-inventory").fadeIn(1300);
         if(data.other != null && data.other != "") {
             $(".other-inventory").attr("data-inventory", data.other.name);
         } else {
@@ -1467,7 +1472,7 @@ var requiredItemOpen = false;
         if ($("#rob-money").length) {
             $("#rob-money").remove();
         }
-        $.post("http://ax-inventory/CloseInventory", JSON.stringify({}));
+        $.post("http://aj-inventory/CloseInventory", JSON.stringify({}));
 
         if (AttachmentScreenActive) {
             $("#qbus-inventory").css({"left": "0vw"});
@@ -1549,7 +1554,7 @@ var requiredItemOpen = false;
                     Inventory.QualityCheck(item, true, false);
                 }
             });
-            $(".z-hotbar-inventory").fadeIn(150);
+            $(".z-hotbar-inventory").fadeIn(750);
         } else {
             $(".z-hotbar-inventory").fadeOut(150, function(){
                 $(".z-hotbar-inventory").html("");
@@ -1586,7 +1591,7 @@ var requiredItemOpen = false;
         $itembox.removeClass('template');
         $itembox.html('<div id="itembox-action"><p>' + type + '</p></div><div id="itembox-label"><p>'+data.item.label+'</p></div><div class="item-slot-img"><img src="images/' + data.item.image + '" alt="' + data.item.name + '" /></div>');
         $(".itemboxes-container").prepend($itembox);
-        $itembox.fadeIn(250);
+        $itembox.fadeIn(750);
         setTimeout(function() {
             $.when($itembox.fadeOut(300)).done(function() {
                 $itembox.remove()
@@ -1652,7 +1657,7 @@ var requiredItemOpen = false;
 $(document).on('click', '#rob-money', function(e){
     e.preventDefault();
     var TargetId = $(this).data('TargetId');
-    $.post('http://ax-inventory/RobMoney', JSON.stringify({
+    $.post('http://aj-inventory/RobMoney', JSON.stringify({
         TargetId: TargetId
     }));
     $("#rob-money").remove();
