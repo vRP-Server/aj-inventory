@@ -268,7 +268,7 @@ Citizen.CreateThread(function()
         if DropsNear ~= nil then
             for k, v in pairs(DropsNear) do
                 if DropsNear[k] ~= nil then
-                    DrawMarker(2, v.coords.x, v.coords.y, v.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.15, 255, 255, 255, 255, false, false, false, 0, false, false, false)
+                    DrawMarker(2, v.coords.x, v.coords.y, v.coords.z - 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.1, 255, 255, 255, 155, false, false, false, false, false, false, false)
                 end
             end
         end
@@ -327,7 +327,6 @@ AddEventHandler("inventory:client:OpenInventory", function(PlayerAmmo, inventory
     if not IsEntityDead(PlayerPedId()) then
         ToggleHotbar(false)
         SetNuiFocus(true, true)
-        --TriggerScreenblurFadeIn(1500)
         if other ~= nil then
             currentOtherInventory = other.name
         end
@@ -342,25 +341,6 @@ AddEventHandler("inventory:client:OpenInventory", function(PlayerAmmo, inventory
         })
         inInventory = true
         TriggerEvent('randPickupAnim')
-    end
-end)
-RegisterNUICallback("GiveItem", function(data, cb)
-    local player, distance = GetClosestPlayer()
-    if player ~= -1 and distance < 2.5 then
-        local playerPed = PlayerPedId(player)
-        local playerId = GetPlayerServerId(player)
-        local plyCoords = GetEntityCoords(playerPed)
-        local pos = GetEntityCoords(PlayerPedId())
-        local dist = GetDistanceBetweenCoords(pos.x, pos.y, pos.z, plyCoords.x, plyCoords.y, plyCoords.z, true)
-        if dist < 2.5 then
-            SetCurrentPedWeapon(PlayerPedId(),'WEAPON_UNARMED',true)
-            TriggerServerEvent("inventory:server:GiveItem", playerId, data.inventory, data.item, data.amount)
-            print(data.amount)
-        else
-            QBCore.Functions.Notify("No one nearby!", "error")
-        end
-    else
-        QBCore.Functions.Notify("No one nearby!", "error")
     end
 end)
 
@@ -711,9 +691,7 @@ RegisterNUICallback("CloseInventory", function(data, cb)
         CurrentGlovebox = nil
         CurrentStash = nil
         SetNuiFocus(false, false)
-        --TriggerScreenblurFadeOut(0)  --Screen Blur / Remove All TriggerScreenblurFadeOut's and TriggerScreenblurFadein's
         inInventory = false
-        --ClearPedTasks(PlayerPedId())
         return
     end
     if CurrentVehicle ~= nil then
@@ -730,11 +708,10 @@ RegisterNUICallback("CloseInventory", function(data, cb)
         TriggerServerEvent("inventory:server:SaveInventory", "drop", CurrentDrop)
         CurrentDrop = 0
     end
-    --TriggerEvent('randPickupAnim')
     SetNuiFocus(false, false)
-    --TriggerScreenblurFadeOut(0)
     inInventory = false
 end)
+
 RegisterNUICallback("UseItem", function(data, cb)
     TriggerServerEvent("inventory:server:UseItem", data.inventory, data.item)
 end)

@@ -513,15 +513,10 @@ function handleDragDrop() {
         }
     });
 
-    $("#item-close").droppable({
-        hoverClass: 'button-hover',
-        drop: function(event, ui) {
-            setTimeout(function(){
-                IsDragging = false;
-            }, 300)
-            $.post("http://aj-inventory/CloseInventory", JSON.stringify({}));
-            Inventory.Close();
-        }
+    $(document).on('click', '#item-close', function(e){
+        e.preventDefault();
+        $.post("http://aj-inventory/CloseInventory", JSON.stringify({}));
+        Inventory.Close();
     });
 
     $("#item-drop").droppable({
@@ -659,13 +654,6 @@ $(document).on('click', '.CombineItem', function(e){
         }))
     }
     Inventory.Close();
-});
-
-$(document).on('click', '.SwitchItem', function(e){
-    e.preventDefault();
-    $(".combine-option-container").hide();
-
-    optionSwitch(combineslotData.fromSlot, combineslotData.toSlot, combineslotData.fromInv, combineslotData.toInv, combineslotData.toAmount, combineslotData.toData, combineslotData.fromData)
 });
 
 function optionSwitch($fromSlot, $toSlot, $fromInv, $toInv, $toAmount, toData, fromData) {
@@ -1334,7 +1322,7 @@ var requiredItemOpen = false;
             requiredItemOpen = false;
         }
 
-        $("#qbus-inventory").fadeIn(1300);
+        $("#qbus-inventory").fadeIn(500);
         if(data.other != null && data.other != "") {
             $(".other-inventory").attr("data-inventory", data.other.name);
         } else {
@@ -1361,9 +1349,6 @@ var requiredItemOpen = false;
             for(i = 1; i < (Inventory.dropslots + 1); i++) {
                 $(".other-inventory").append('<div class="item-slot" data-slot="' + i + '"><div class="item-slot-img"></div><div class="item-slot-label"><p>&nbsp;</p></div></div>');
             }
-            $(".other-inventory .item-slot").css({
-                "background-color": "rgba(0, 0, 0, 0.123)"
-            });
         }
 
         if (data.inventory !== null) {
@@ -1415,6 +1400,7 @@ var requiredItemOpen = false;
                 }
             });
         }
+        
         var per =(totalWeight/1000)/(data.maxweight/100000)
         $(".pro").css("width",per+"%");
         $("#player-inv-weight").html("Weight: " + (totalWeight / 1000).toFixed(2) + " / " + (data.maxweight / 1000).toFixed(2) + " lbs");
@@ -1467,7 +1453,7 @@ var requiredItemOpen = false;
         $(".ply-hotbar-inventory").css("display", "block");
         $(".ply-iteminfo-container").css("display", "none");
         $("#qbus-inventory").fadeOut(200);
-        $(".combine-option-container").hide();
+        $(".combine-option-container").fadeOut(200);
         $(".item-slot").remove();
         if ($("#rob-money").length) {
             $("#rob-money").remove();
