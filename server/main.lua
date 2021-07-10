@@ -1,6 +1,3 @@
-QBCore = nil
-TriggerEvent('QBCore:GetObject', function(obj) QBCore = obj end)
-
 Drops = {}
 Trunks = {}
 Gloveboxes = {}
@@ -80,208 +77,201 @@ AddEventHandler('inventory:server:OpenInventory', function(name, id, other)
 	local src = source
 	local ply = Player(src)
 	local Player = QBCore.Functions.GetPlayer(src)
-	local PlayerAmmo = {}
 	if not ply.state.inv_busy then
-		QBCore.Functions.ExecuteSql(false, "SELECT * FROM `playerammo` WHERE `citizenid` = '"..Player.PlayerData.citizenid.."'", function(ammo)
-			if ammo[1] ~= nil then
-				PlayerAmmo = json.decode(ammo[1].ammo)
-			end
-
-			if name ~= nil and id ~= nil then
-				local secondInv = {}
-				if name == "stash" then
-					if Stashes[id] ~= nil then
-						if Stashes[id].isOpen then
-							local Target = QBCore.Functions.GetPlayer(Stashes[id].isOpen)
-							if Target ~= nil then
-								TriggerClientEvent('inventory:client:CheckOpenState', Stashes[id].isOpen, name, id, Stashes[id].label)
-							else
-								Stashes[id].isOpen = false
-							end
-						end
-					end
-					local maxweight = 1000000
-					local slots = 50
-					if other ~= nil then 
-						maxweight = other.maxweight ~= nil and other.maxweight or 1000000
-						slots = other.slots ~= nil and other.slots or 50
-					end
-					secondInv.name = "stash-"..id
-					secondInv.label = "Stash-"..id
-					secondInv.maxweight = maxweight
-					secondInv.inventory = {}
-					secondInv.slots = slots
-					if Stashes[id] ~= nil and Stashes[id].isOpen then
-						secondInv.name = "none-inv"
-						secondInv.label = "Stash-None"
-						secondInv.maxweight = 1000000
-						secondInv.inventory = {}
-						secondInv.slots = 0
-					else
-						local stashItems = GetStashItems(id)
-						if next(stashItems) ~= nil then
-							secondInv.inventory = stashItems
-							Stashes[id] = {}
-							Stashes[id].items = stashItems
-							Stashes[id].isOpen = src
-							Stashes[id].label = secondInv.label
+		if name ~= nil and id ~= nil then
+			local secondInv = {}
+			if name == "stash" then
+				if Stashes[id] ~= nil then
+					if Stashes[id].isOpen then
+						local Target = QBCore.Functions.GetPlayer(Stashes[id].isOpen)
+						if Target ~= nil then
+							TriggerClientEvent('inventory:client:CheckOpenState', Stashes[id].isOpen, name, id, Stashes[id].label)
 						else
-							Stashes[id] = {}
-							Stashes[id].items = {}
-							Stashes[id].isOpen = src
-							Stashes[id].label = secondInv.label
+							Stashes[id].isOpen = false
 						end
-					end
-				elseif name == "trunk" then
-					if Trunks[id] ~= nil then
-						if Trunks[id].isOpen then
-							local Target = QBCore.Functions.GetPlayer(Trunks[id].isOpen)
-							if Target ~= nil then
-								TriggerClientEvent('inventory:client:CheckOpenState', Trunks[id].isOpen, name, id, Trunks[id].label)
-							else
-								Trunks[id].isOpen = false
-							end
-						end
-					end
-					secondInv.name = "trunk-"..id
-					secondInv.label = "Trunk-"..id
-					secondInv.maxweight = other.maxweight ~= nil and other.maxweight or 60000
-					secondInv.inventory = {}
-					secondInv.slots = other.slots ~= nil and other.slots or 50
-					if (Trunks[id] ~= nil and Trunks[id].isOpen) or (QBCore.Shared.SplitStr(id, "PLZI")[2] ~= nil and Player.PlayerData.job.name ~= "police") then
-						secondInv.name = "none-inv"
-						secondInv.label = "Trunk-None"
-						secondInv.maxweight = other.maxweight ~= nil and other.maxweight or 60000
-						secondInv.inventory = {}
-						secondInv.slots = 0
-					else
-						if id ~= nil then 
-							local ownedItems = GetOwnedVehicleItems(id)
-							if IsVehicleOwned(id) and next(ownedItems) ~= nil then
-								secondInv.inventory = ownedItems
-								Trunks[id] = {}
-								Trunks[id].items = ownedItems
-								Trunks[id].isOpen = src
-								Trunks[id].label = secondInv.label
-							elseif Trunks[id] ~= nil and not Trunks[id].isOpen then
-								secondInv.inventory = Trunks[id].items
-								Trunks[id].isOpen = src
-								Trunks[id].label = secondInv.label
-							else
-								Trunks[id] = {}
-								Trunks[id].items = {}
-								Trunks[id].isOpen = src
-								Trunks[id].label = secondInv.label
-							end
-						end
-					end
-				elseif name == "glovebox" then
-					if Gloveboxes[id] ~= nil then
-						if Gloveboxes[id].isOpen then
-							local Target = QBCore.Functions.GetPlayer(Gloveboxes[id].isOpen)
-							if Target ~= nil then
-								TriggerClientEvent('inventory:client:CheckOpenState', Gloveboxes[id].isOpen, name, id, Gloveboxes[id].label)
-							else
-								Gloveboxes[id].isOpen = false
-							end
-						end
-					end
-					secondInv.name = "glovebox-"..id
-					secondInv.label = "Glovebox-"..id
-					secondInv.maxweight = 10000
-					secondInv.inventory = {}
-					secondInv.slots = 5
-					if Gloveboxes[id] ~= nil and Gloveboxes[id].isOpen then
-						secondInv.name = "none-inv"
-						secondInv.label = "Glovebox-None"
-						secondInv.maxweight = 10000
-						secondInv.inventory = {}
-						secondInv.slots = 0
-					else
-						local ownedItems = GetOwnedVehicleGloveboxItems(id)
-						if Gloveboxes[id] ~= nil and not Gloveboxes[id].isOpen then
-							secondInv.inventory = Gloveboxes[id].items
-							Gloveboxes[id].isOpen = src
-							Gloveboxes[id].label = secondInv.label
-						elseif IsVehicleOwned(id) and next(ownedItems) ~= nil then
-							secondInv.inventory = ownedItems
-							Gloveboxes[id] = {}
-							Gloveboxes[id].items = ownedItems
-							Gloveboxes[id].isOpen = src
-							Gloveboxes[id].label = secondInv.label
-						else
-							Gloveboxes[id] = {}
-							Gloveboxes[id].items = {}
-							Gloveboxes[id].isOpen = src
-							Gloveboxes[id].label = secondInv.label
-						end
-					end
-				elseif name == "shop" then
-					secondInv.name = "itemshop-"..id
-					secondInv.label = other.label
-					secondInv.maxweight = 900000
-					secondInv.inventory = SetupShopItems(id, other.items)
-					ShopItems[id] = {}
-					ShopItems[id].items = other.items
-					secondInv.slots = #other.items
-				elseif name == "traphouse" then
-					secondInv.name = "traphouse-"..id
-					secondInv.label = other.label
-					secondInv.maxweight = 900000
-					secondInv.inventory = other.items
-					secondInv.slots = other.slots
-				elseif name == "crafting" then
-					secondInv.name = "crafting"
-					secondInv.label = other.label
-					secondInv.maxweight = 900000
-					secondInv.inventory = other.items
-					secondInv.slots = #other.items
-				elseif name == "attachment_crafting" then
-					secondInv.name = "attachment_crafting"
-					secondInv.label = other.label
-					secondInv.maxweight = 900000
-					secondInv.inventory = other.items
-					secondInv.slots = #other.items
-				elseif name == "otherplayer" then
-					local OtherPlayer = QBCore.Functions.GetPlayer(tonumber(id))
-					if OtherPlayer ~= nil then
-						secondInv.name = "otherplayer-"..id
-						secondInv.label = "Player-"..id
-						secondInv.maxweight = QBCore.Config.Player.MaxWeight
-						secondInv.inventory = OtherPlayer.PlayerData.items
-						if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
-							secondInv.slots = QBCore.Config.Player.MaxInvSlots
-						else
-							secondInv.slots = QBCore.Config.Player.MaxInvSlots - 1
-						end
-						Citizen.Wait(250)
-					end
-				else
-					if Drops[id] ~= nil and not Drops[id].isOpen then
-						secondInv.name = id
-						secondInv.label = "Ground-"..tostring(id)
-						secondInv.maxweight = 500000
-						secondInv.inventory = Drops[id].items
-						secondInv.slots = 30
-						Drops[id].isOpen = src
-						Drops[id].label = secondInv.label
-					else
-						secondInv.name = "none-inv"
-						secondInv.label = "ERROR"
-						secondInv.maxweight = 0
-						secondInv.inventory = {}
-						secondInv.slots = 0
-						--Drops[id].label = secondInv.label
 					end
 				end
-				TriggerClientEvent("inventory:client:OpenInventory", src, PlayerAmmo, Player.PlayerData.items, secondInv)
+				local maxweight = 1000000
+				local slots = 50
+				if other ~= nil then 
+					maxweight = other.maxweight ~= nil and other.maxweight or 1000000
+					slots = other.slots ~= nil and other.slots or 50
+				end
+				secondInv.name = "stash-"..id
+				secondInv.label = "Stash-"..id
+				secondInv.maxweight = maxweight
+				secondInv.inventory = {}
+				secondInv.slots = slots
+				if Stashes[id] ~= nil and Stashes[id].isOpen then
+					secondInv.name = "none-inv"
+					secondInv.label = "Stash-None"
+					secondInv.maxweight = 1000000
+					secondInv.inventory = {}
+					secondInv.slots = 0
+				else
+					local stashItems = GetStashItems(id)
+					if next(stashItems) ~= nil then
+						secondInv.inventory = stashItems
+						Stashes[id] = {}
+						Stashes[id].items = stashItems
+						Stashes[id].isOpen = src
+						Stashes[id].label = secondInv.label
+					else
+						Stashes[id] = {}
+						Stashes[id].items = {}
+						Stashes[id].isOpen = src
+						Stashes[id].label = secondInv.label
+					end
+				end
+			elseif name == "trunk" then
+				if Trunks[id] ~= nil then
+					if Trunks[id].isOpen then
+						local Target = QBCore.Functions.GetPlayer(Trunks[id].isOpen)
+						if Target ~= nil then
+							TriggerClientEvent('inventory:client:CheckOpenState', Trunks[id].isOpen, name, id, Trunks[id].label)
+						else
+							Trunks[id].isOpen = false
+						end
+					end
+				end
+				secondInv.name = "trunk-"..id
+				secondInv.label = "Trunk-"..id
+				secondInv.maxweight = other.maxweight ~= nil and other.maxweight or 60000
+				secondInv.inventory = {}
+				secondInv.slots = other.slots ~= nil and other.slots or 50
+				if (Trunks[id] ~= nil and Trunks[id].isOpen) or (QBCore.Shared.SplitStr(id, "PLZI")[2] ~= nil and Player.PlayerData.job.name ~= "police") then
+					secondInv.name = "none-inv"
+					secondInv.label = "Trunk-None"
+					secondInv.maxweight = other.maxweight ~= nil and other.maxweight or 60000
+					secondInv.inventory = {}
+					secondInv.slots = 0
+				else
+					if id ~= nil then 
+						local ownedItems = GetOwnedVehicleItems(id)
+						if IsVehicleOwned(id) and next(ownedItems) ~= nil then
+							secondInv.inventory = ownedItems
+							Trunks[id] = {}
+							Trunks[id].items = ownedItems
+							Trunks[id].isOpen = src
+							Trunks[id].label = secondInv.label
+						elseif Trunks[id] ~= nil and not Trunks[id].isOpen then
+							secondInv.inventory = Trunks[id].items
+							Trunks[id].isOpen = src
+							Trunks[id].label = secondInv.label
+						else
+							Trunks[id] = {}
+							Trunks[id].items = {}
+							Trunks[id].isOpen = src
+							Trunks[id].label = secondInv.label
+						end
+					end
+				end
+			elseif name == "glovebox" then
+				if Gloveboxes[id] ~= nil then
+					if Gloveboxes[id].isOpen then
+						local Target = QBCore.Functions.GetPlayer(Gloveboxes[id].isOpen)
+						if Target ~= nil then
+							TriggerClientEvent('inventory:client:CheckOpenState', Gloveboxes[id].isOpen, name, id, Gloveboxes[id].label)
+						else
+							Gloveboxes[id].isOpen = false
+						end
+					end
+				end
+				secondInv.name = "glovebox-"..id
+				secondInv.label = "Glovebox-"..id
+				secondInv.maxweight = 10000
+				secondInv.inventory = {}
+				secondInv.slots = 5
+				if Gloveboxes[id] ~= nil and Gloveboxes[id].isOpen then
+					secondInv.name = "none-inv"
+					secondInv.label = "Glovebox-None"
+					secondInv.maxweight = 10000
+					secondInv.inventory = {}
+					secondInv.slots = 0
+				else
+					local ownedItems = GetOwnedVehicleGloveboxItems(id)
+					if Gloveboxes[id] ~= nil and not Gloveboxes[id].isOpen then
+						secondInv.inventory = Gloveboxes[id].items
+						Gloveboxes[id].isOpen = src
+						Gloveboxes[id].label = secondInv.label
+					elseif IsVehicleOwned(id) and next(ownedItems) ~= nil then
+						secondInv.inventory = ownedItems
+						Gloveboxes[id] = {}
+						Gloveboxes[id].items = ownedItems
+						Gloveboxes[id].isOpen = src
+						Gloveboxes[id].label = secondInv.label
+					else
+						Gloveboxes[id] = {}
+						Gloveboxes[id].items = {}
+						Gloveboxes[id].isOpen = src
+						Gloveboxes[id].label = secondInv.label
+					end
+				end
+			elseif name == "shop" then
+				secondInv.name = "itemshop-"..id
+				secondInv.label = other.label
+				secondInv.maxweight = 900000
+				secondInv.inventory = SetupShopItems(id, other.items)
+				ShopItems[id] = {}
+				ShopItems[id].items = other.items
+				secondInv.slots = #other.items
+			elseif name == "traphouse" then
+				secondInv.name = "traphouse-"..id
+				secondInv.label = other.label
+				secondInv.maxweight = 900000
+				secondInv.inventory = other.items
+				secondInv.slots = other.slots
+			elseif name == "crafting" then
+				secondInv.name = "crafting"
+				secondInv.label = other.label
+				secondInv.maxweight = 900000
+				secondInv.inventory = other.items
+				secondInv.slots = #other.items
+			elseif name == "attachment_crafting" then
+				secondInv.name = "attachment_crafting"
+				secondInv.label = other.label
+				secondInv.maxweight = 900000
+				secondInv.inventory = other.items
+				secondInv.slots = #other.items
+			elseif name == "otherplayer" then
+				local OtherPlayer = QBCore.Functions.GetPlayer(tonumber(id))
+				if OtherPlayer ~= nil then
+					secondInv.name = "otherplayer-"..id
+					secondInv.label = "Player-"..id
+					secondInv.maxweight = QBCore.Config.Player.MaxWeight
+					secondInv.inventory = OtherPlayer.PlayerData.items
+					if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
+						secondInv.slots = QBCore.Config.Player.MaxInvSlots
+					else
+						secondInv.slots = QBCore.Config.Player.MaxInvSlots - 1
+					end
+					Citizen.Wait(250)
+				end
 			else
-				TriggerClientEvent("inventory:client:OpenInventory", src, PlayerAmmo, Player.PlayerData.items)
+				if Drops[id] ~= nil and not Drops[id].isOpen then
+					secondInv.name = id
+					secondInv.label = "Dropped-"..tostring(id)
+					secondInv.maxweight = 100000
+					secondInv.inventory = Drops[id].items
+					secondInv.slots = 30
+					Drops[id].isOpen = src
+					Drops[id].label = secondInv.label
+				else
+					secondInv.name = "none-inv"
+					secondInv.label = "Dropped-None"
+					secondInv.maxweight = 100000
+					secondInv.inventory = {}
+					secondInv.slots = 0
+					--Drops[id].label = secondInv.label
+				end
 			end
-		end)
-    else
-    	TriggerClientEvent('QBCore:Notify', src, 'Not Accessible', 'error')
-    end 	
+			TriggerClientEvent("inventory:client:OpenInventory", src, {}, Player.PlayerData.items, secondInv)
+		else
+			TriggerClientEvent("inventory:client:OpenInventory", src, {}, Player.PlayerData.items)
+		end
+	else
+		TriggerClientEvent('QBCore:Notify', src, 'Not Accessible', 'error')
+	end 	
 end)
 
 RegisterServerEvent("inventory:server:SaveInventory")
@@ -520,7 +510,7 @@ AddEventHandler('inventory:server:SetInventoryData', function(fromInventory, toI
 				end
 			end
 		else
-			TriggerClientEvent("QBCore:Notify", src, "You don't have this item!", "error")
+			TriggerClientEvent("QBCore:Notify", src, "You don\'t have this item!", "error")
 		end
 	elseif QBCore.Shared.SplitStr(fromInventory, "-")[1] == "otherplayer" then
 		local playerId = tonumber(QBCore.Shared.SplitStr(fromInventory, "-")[2])
@@ -767,8 +757,8 @@ AddEventHandler('inventory:server:SetInventoryData', function(fromInventory, toI
 				if Player.Functions.RemoveMoney("cash", price, "dealer-item-bought") then
 					Player.Functions.AddItem(itemData.name, fromAmount, toSlot, itemData.info)
 					TriggerClientEvent('qb-drugs:client:updateDealerItems', src, itemData, fromAmount)
-					TriggerClientEvent('QBCore:Notify', src, itemInfo["label"] .. " ingekocht!", "success")
-					TriggerEvent("qb-log:server:CreateLog", "dealers", "Dealer item gekocht", "green", "**"..GetPlayerName(src) .. "** heeft een " .. itemInfo["label"] .. " gekocht voor $"..price)
+					TriggerClientEvent('QBCore:Notify', src, itemInfo["label"] .. " bought!", "success")
+					TriggerEvent("qb-log:server:CreateLog", "dealers", "Dealer item bought", "green", "**"..GetPlayerName(src) .. "** bought a " .. itemInfo["label"] .. "  for $"..price)
 				else
 					TriggerClientEvent('QBCore:Notify', src, "You don't have enough cash..", "error")
 				end
@@ -779,15 +769,12 @@ AddEventHandler('inventory:server:SetInventoryData', function(fromInventory, toI
 				TriggerClientEvent('qb-shops:client:UpdateShop', src, QBCore.Shared.SplitStr(shopType, "_")[2], itemData, fromAmount)
 				TriggerClientEvent('QBCore:Notify', src, itemInfo["label"] .. " bought!", "success")
 				TriggerEvent("qb-log:server:CreateLog", "shops", "Shop item bought", "green", "**"..GetPlayerName(src) .. "** bought a " .. itemInfo["label"] .. " for $"..price)
-
---Uncomment The stuff below if you want it so stuff likes shops will take from your bank account if you dont have enough cash on hand
-
-			--elseif bankBalance >= price then
-			--	Player.Functions.RemoveMoney("bank", price, "itemshop-bought-item")
-			--	Player.Functions.AddItem(itemData.name, fromAmount, toSlot, itemData.info)
-			--	TriggerClientEvent('qb-shops:client:UpdateShop', src, QBCore.Shared.SplitStr(shopType, "_")[2], itemData, fromAmount)
-			--	TriggerClientEvent('QBCore:Notify', src, itemInfo["label"] .. " bought!", "success")
-			--	TriggerEvent("qb-log:server:CreateLog", "shops", "Shop item bought", "green", "**"..GetPlayerName(src) .. "** bought a " .. itemInfo["label"] .. " for $"..price)
+			elseif bankBalance >= price then
+				Player.Functions.RemoveMoney("bank", price, "itemshop-bought-item")
+				Player.Functions.AddItem(itemData.name, fromAmount, toSlot, itemData.info)
+				TriggerClientEvent('qb-shops:client:UpdateShop', src, QBCore.Shared.SplitStr(shopType, "_")[2], itemData, fromAmount)
+				TriggerClientEvent('QBCore:Notify', src, itemInfo["label"] .. " bought!", "success")
+				TriggerEvent("qb-log:server:CreateLog", "shops", "Shop item bought", "green", "**"..GetPlayerName(src) .. "** bought a " .. itemInfo["label"] .. " for $"..price)
 			else
 				TriggerClientEvent('QBCore:Notify', src, "You don't have enough cash..", "error")
 			end
@@ -796,14 +783,11 @@ AddEventHandler('inventory:server:SetInventoryData', function(fromInventory, toI
 				Player.Functions.AddItem(itemData.name, fromAmount, toSlot, itemData.info)
 				TriggerClientEvent('QBCore:Notify', src, itemInfo["label"] .. " bought!", "success")
 				TriggerEvent("qb-log:server:CreateLog", "shops", "Shop item bought", "green", "**"..GetPlayerName(src) .. "** bought a " .. itemInfo["label"] .. " for $"..price)
-
---Uncomment The stuff below if you want it so stuff likes shops will take from your bank account if you dont have enough cash on hand
-
-			--elseif bankBalance >= price then
-			--	Player.Functions.RemoveMoney("bank", price, "unkown-itemshop-bought-item")
-			--	Player.Functions.AddItem(itemData.name, fromAmount, toSlot, itemData.info)
-			--	TriggerClientEvent('QBCore:Notify', src, itemInfo["label"] .. " bought!", "success")
-			--	TriggerEvent("qb-log:server:CreateLog", "shops", "Shop item bought", "green", "**"..GetPlayerName(src) .. "** bought a " .. itemInfo["label"] .. " for $"..price)
+			elseif bankBalance >= price then
+				Player.Functions.RemoveMoney("bank", price, "unkown-itemshop-bought-item")
+				Player.Functions.AddItem(itemData.name, fromAmount, toSlot, itemData.info)
+				TriggerClientEvent('QBCore:Notify', src, itemInfo["label"] .. " bought!", "success")
+				TriggerEvent("qb-log:server:CreateLog", "shops", "Shop item bought", "green", "**"..GetPlayerName(src) .. "** bought a " .. itemInfo["label"] .. " for $"..price)
 			else
 				TriggerClientEvent('QBCore:Notify', src, "You don\'t have enough cash..", "error")
 			end
@@ -963,7 +947,7 @@ function GetStashItems(stashId)
 					slot = item.slot,
 				}
 			end
-			QBCore.Functions.ExecuteSql(false, "DELETE FROM `stashitems` WHERE `stash` = '"..stashId.."'")
+			exports.ghmattimysql:execute('DELETE FROM stashitems WHERE stash=@stash', {['@stash'] = stashId})
 		else
 			QBCore.Functions.ExecuteSql(true, "SELECT * FROM `stashitemsnew` WHERE `stash` = '"..stashId.."'", function(result)
 				if result[1] ~= nil then 
@@ -1001,11 +985,11 @@ end)
 
 RegisterServerEvent('qb-inventory:server:SaveStashItems')
 AddEventHandler('qb-inventory:server:SaveStashItems', function(stashId, items)
-	QBCore.Functions.ExecuteSql(false, "SELECT * FROM `stashitemsnew` WHERE `stash` = '"..stashId.."'", function(result)
+	exports.ghmattimysql:execute('SELECT * FROM stashitemsnew WHERE stash=@stash', {['@stash'] = stashId}, function(result)
 		if result[1] ~= nil then
-			QBCore.Functions.ExecuteSql(false, "UPDATE `stashitemsnew` SET `items` = '"..json.encode(items).."' WHERE `stash` = '"..stashId.."'")
+			exports.ghmattimysql:execute('UPDATE stashitemsnew SET items=@items WHERE stash=@stash', {['@items'] = json.encode(items), ['@stash'] = stashId})
 		else
-			QBCore.Functions.ExecuteSql(false, "INSERT INTO `stashitemsnew` (`stash`, `items`) VALUES ('"..stashId.."', '"..json.encode(items).."')")
+			exports.ghmattimysql:execute('INSERT INTO stashitemsnew (stash, items) VALUES (@stash, @items)', {['@stash'] = stashId, ['@items'] = json.encode(items)})
 		end
 	end)
 end)
@@ -1017,12 +1001,12 @@ function SaveStashItems(stashId, items)
 				item.description = nil
 			end
 
-			QBCore.Functions.ExecuteSql(false, "SELECT * FROM `stashitemsnew` WHERE `stash` = '"..stashId.."'", function(result)
+			exports.ghmattimysql:execute('SELECT * FROM stashitemsnew WHERE stash=@stash', {['@stash'] = stashId}, function(result)
 				if result[1] ~= nil then
-					QBCore.Functions.ExecuteSql(false, "UPDATE `stashitemsnew` SET `items` = '"..json.encode(items).."' WHERE `stash` = '"..stashId.."'")
+					exports.ghmattimysql:execute('UPDATE stashitemsnew SET items=@items WHERE stash=@stash', {['@items'] = json.encode(items), ['@stash'] = stashId})
 					Stashes[stashId].isOpen = false
 				else
-					QBCore.Functions.ExecuteSql(false, "INSERT INTO `stashitemsnew` (`stash`, `items`) VALUES ('"..stashId.."', '"..json.encode(items).."')")
+					exports.ghmattimysql:execute('INSERT INTO stashitemsnew (stash, items) VALUES (@stash, @items)', {['@stash'] = stashId, ['@items'] = json.encode(items)})
 					Stashes[stashId].isOpen = false
 				end
 			end)
@@ -1127,7 +1111,7 @@ function GetOwnedVehicleItems(plate)
 					slot = item.slot,
 				}
 			end
-			QBCore.Functions.ExecuteSql(false, "DELETE FROM `trunkitems` WHERE `plate` = '"..plate.."'")
+			exports.ghmattimysql:execute('DELETE FROM trunkitems WHERE plate=@plate', {['@plate'] = plate})
 		else
 			QBCore.Functions.ExecuteSql(true, "SELECT * FROM `trunkitemsnew` WHERE `plate` = '"..plate.."'", function(result)
 				if result[1] ~= nil then
@@ -1165,14 +1149,13 @@ function SaveOwnedVehicleItems(plate, items)
 			for slot, item in pairs(items) do
 				item.description = nil
 			end
-
-			QBCore.Functions.ExecuteSql(false, "SELECT * FROM `trunkitemsnew` WHERE `plate` = '"..plate.."'", function(result)
+			exports.ghmattimysql:execute('SELECT * FROM trunkitemsnew WHERE plate=@plate', {['@plate'] = plate}, function(result)
 				if result[1] ~= nil then
-					QBCore.Functions.ExecuteSql(false, "UPDATE `trunkitemsnew` SET `items` = '"..json.encode(items).."' WHERE `plate` = '"..plate.."'", function(result) 
+					exports.ghmattimysql:execute('UPDATE trunkitemsnew SET items=@items WHERE plate=@plate', {['@items'] = json.encode(items), ['@plate'] = plate}, function(result)
 						Trunks[plate].isOpen = false
 					end)
 				else
-					QBCore.Functions.ExecuteSql(false, "INSERT INTO `trunkitemsnew` (`plate`, `items`) VALUES ('"..plate.."', '"..json.encode(items).."')", function(result) 
+					exports.ghmattimysql:execute('INSERT INTO trunkitemsnew (plate, items) VALUES (@plate, @items)', {['@plate'] = plate, ['@items'] = json.encode(items)}, function(result)
 						Trunks[plate].isOpen = false
 					end)
 				end
@@ -1278,7 +1261,7 @@ function GetOwnedVehicleGloveboxItems(plate)
 					slot = item.slot,
 				}
 			end
-			QBCore.Functions.ExecuteSql(false, "DELETE FROM `gloveboxitems` WHERE `plate` = '"..plate.."'")
+			exports.ghmattimysql:execute('DELETE FROM gloveboxitems WHERE plate=@plate', {['@plate'] = plate})
 		else
 			QBCore.Functions.ExecuteSql(true, "SELECT * FROM `gloveboxitemsnew` WHERE `plate` = '"..plate.."'", function(result)
 				if result[1] ~= nil then 
@@ -1316,14 +1299,13 @@ function SaveOwnedGloveboxItems(plate, items)
 			for slot, item in pairs(items) do
 				item.description = nil
 			end
-
-			QBCore.Functions.ExecuteSql(false, "SELECT * FROM `gloveboxitemsnew` WHERE `plate` = '"..plate.."'", function(result)
+			exports.ghmattimysql:execute('SELECT * FROM gloveboxitemsnew WHERE plate=@plate', {['@plate'] = plate}, function(result)
 				if result[1] ~= nil then
-					QBCore.Functions.ExecuteSql(false, "UPDATE `gloveboxitemsnew` SET `items` = '"..json.encode(items).."' WHERE `plate` = '"..plate.."'", function(result) 
+					exports.ghmattimysql:execute('UPDATE gloveboxitemsnew SET items=@items WHERE plate=@plate', {['@items'] = json.encode(items), ['@plate'] = plate}, function(result)
 						Gloveboxes[plate].isOpen = false
 					end)
 				else
-					QBCore.Functions.ExecuteSql(false, "INSERT INTO `gloveboxitemsnew` (`plate`, `items`) VALUES ('"..plate.."', '"..json.encode(items).."')", function(result) 
+					exports.ghmattimysql:execute('INSERT INTO gloveboxitemsnew (plate, items) VALUES (@plate, @items)', {['@plate'] = plate, ['@items'] = json.encode(items)}, function(result)
 						Gloveboxes[plate].isOpen = false
 					end)
 				end
@@ -1471,7 +1453,7 @@ end
 function CreateNewDrop(source, fromSlot, toSlot, itemAmount)
 	local Player = QBCore.Functions.GetPlayer(source)
 	local itemData = Player.Functions.GetItemBySlot(fromSlot)
-	local coords = GetEntityCoords(GetPlayerPed(source))
+	local coords = GetEntityCoords(GetPlayerPed(source)) 
 	if Player.Functions.RemoveItem(itemData.name, itemAmount, itemData.slot) then
 		TriggerClientEvent("inventory:client:CheckWeapon", source, itemData.name)
 		local itemInfo = QBCore.Shared.Items[itemData.name:lower()]
@@ -1526,7 +1508,7 @@ QBCore.Commands.Add("resetinv", "Reset Inventory (Admin Only)", {{name="type", h
 			TriggerClientEvent('QBCore:Notify', source,  "Not a valid type..", "error")
 		end
 	else
-		TriggerClientEvent('QBCore:Notify', source,  "Args not filled out correctly..", "error")
+		TriggerClientEvent('QBCore:Notify', source,  "Argumenten not filled out correctly..", "error")
 	end
 end, "admin")
 
@@ -1579,7 +1561,7 @@ QBCore.Commands.Add("giveitem", "Give An Item (Admin Only)", {{name="id", help="
 			TriggerClientEvent('QBCore:Notify', source,  "Invalid Amount", "error")
 		end
 	else
-		TriggerClientEvent('QBCore:Notify', source,  "Invalid Player ID", "error")
+		TriggerClientEvent('QBCore:Notify', source,  "Player Is Not Online", "error")
 	end
 end, "admin")
 
@@ -1644,4 +1626,19 @@ QBCore.Functions.CreateUseableItem("id_card", function(source, item)
 			})
 		end
 	end
+end)
+
+QBCore.Functions.CreateUseableItem("weaponlicense", function(source, item)
+    for k, v in pairs(QBCore.Functions.GetPlayers()) do
+        local character = QBCore.Functions.GetPlayer(source)
+        local PlayerPed = GetPlayerPed(source)
+        local TargetPed = GetPlayerPed(v)
+        local dist = #(GetEntityCoords(PlayerPed) - GetEntityCoords(TargetPed))
+        if dist < 3.0 then
+            TriggerClientEvent('chat:addMessage', v,  {
+                template = '<div class="chat-message advert"><div class="chat-message-body"><strong>{0}:</strong><br><br> <strong>First Name:</strong> {1} <br><strong>Last Name:</strong> {2} <br><strong>Birth Date:</strong> {3} <br><strong>Licenses:</strong> {4}</div></div>',
+                args = {'Weapons License', character.PlayerData.charinfo.firstname, character.PlayerData.charinfo.lastname, character.PlayerData.charinfo.birthdate, item.info.type}
+            })
+        end
+    end
 end)
