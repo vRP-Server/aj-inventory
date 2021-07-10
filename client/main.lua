@@ -1,7 +1,6 @@
 inInventory = false
 hotbarOpen = false
 
-local inventoryTest = {}
 local currentWeapon = nil
 local CurrentWeaponData = {}
 local currentOtherInventory = nil
@@ -148,7 +147,7 @@ RegisterCommand('inventory', function()
                                 curVeh = vehicle
                                 CurrentGlovebox = nil
                             else
-                                QBCore.Functions.Notify("Vehicle is locked..", "error")
+                                QBCore.Functions.Notify("Vehicle is locked", "error")
                                 return
                             end
                         else
@@ -705,6 +704,7 @@ RegisterNUICallback("CloseInventory", function(data, cb)
     SetNuiFocus(false, false)
     inInventory = false
 end)
+
 RegisterNUICallback("UseItem", function(data, cb)
     TriggerServerEvent("inventory:server:UseItem", data.inventory, data.item)
 end)
@@ -761,7 +761,7 @@ function OpenTrunk()
         RequestAnimDict("amb@prop_human_bum_bin@idle_b")
         Citizen.Wait(100)
     end
-    TaskPlayAnim(PlayerPedId(), "amb@prop_human_bum_bin@idle_b", "idle_d", 4.0, 4.0, -1, 50, 0, false, false, false)
+    --TaskPlayAnim(PlayerPedId(), "amb@prop_human_bum_bin@idle_b", "idle_d", 4.0, 4.0, -1, 50, 0, false, false, false)
     if (IsBackEngine(GetEntityModel(vehicle))) then
         SetVehicleDoorOpen(vehicle, 4, false, false)
     else
