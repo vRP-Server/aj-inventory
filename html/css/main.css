@@ -46,6 +46,23 @@ body {
     overflow-x: hidden;
 }
 
+#progressbar {
+    border-radius: 50px;
+    background-color: rgba(24, 26, 30, 0.6);
+   }
+   .pro {
+       background: linear-gradient(to right, #389f46a9, #f35858b0 500px);
+     width: 0%;
+     height: 17px;
+     border-radius: 50px;
+   }
+   .pro1 {
+       background: linear-gradient(to right, #389f46a9, #f35858b0 500px);
+     width: 0%;
+     height: 17px;
+     border-radius: 50px;
+   }
+
 #qbus-inventory {
     position: absolute;
     width: 100%;
@@ -319,12 +336,10 @@ body {
     width: 0%;
     height: 100%;
     background-color: rgba(111, 195, 111, 0.8);
-    box-shadow: inset 0 0 .25vh 0 rgba(0, 0, 0, 0.2);
-    /*border-radius: 4px;*/
 }
 
 .item-slot-quality p {
-    color: rgba(247, 247, 247, 0);
+    color: rgba(255, 255, 255, 0);
     font-size: .8vh;
     text-align: center;
     text-transform: uppercase;
@@ -406,7 +421,7 @@ body {
 }
 
 .player-inv-weight p {
-    color: rgb(204, 11, 11);
+    color: rgba(255, 0, 0, 0);
     font-size: 12px;
     font-family: 'Roboto Mono', monospace;
 }
@@ -480,8 +495,8 @@ body {
     margin-right: 1vh;
     width: 110px;
     height: 130px;
-    background-color: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 0, 0, 0);
+    border: 1px solid rgba(255, 0, 0, 0);
 }
 
 #itembox-action {
@@ -550,7 +565,7 @@ body {
     position: absolute;
     bottom:0;
     width: 100%;
-    background-color: rgba(24, 0, 0, 0.2);
+    background-color: #181E25;
     height: 21px;
 }
 
@@ -660,7 +675,7 @@ body {
     top: 0;
     width: 100%;
     height: 5vh;
-    background-color: rgba(120, 10, 20, 0.5);
+    background-color: rgba(255, 0, 21, 0.5);
     text-align: center;
     color: rgba(216, 216, 216, 0.897);
 }

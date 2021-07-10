@@ -1,18 +1,12 @@
 var InventoryOption = "120, 10, 20";
-
 var totalWeight = 0;
 var totalWeightOther = 0;
-
 var playerMaxWeight = 0;
 var otherMaxWeight = 0;
-
 var otherLabel = "";
-
 var ClickedItemData = {};
-
 var AttachmentScreenActive = false;
 var ControlPressed = false;
-
 var IsDragging = false;
 
 $(document).on('keydown', function() {
@@ -123,11 +117,9 @@ $(document).on("click", ".item-slot", function(e){
         if (ItemData.name !== undefined) {
             if ((ItemData.name).split("_")[0] == "weapon") {
                 if (!$("#weapon-attachments").length) {
-                    // if (ItemData.info.attachments !== null && ItemData.info.attachments !== undefined && ItemData.info.attachments.length > 0) {
                     $(".inv-options-list").append('<center><div style="background-color: #466887;" class="inv-option-item" id="weapon-attachments"><p>ATTACHMENTS</p></div></center>');
                     $("#weapon-attachments").hide().fadeIn(250);
                     ClickedItemData = ItemData;
-                    // }
                 } else if (ClickedItemData == ItemData) {
                     $("#weapon-attachments").fadeOut(250, function(){
                         $("#weapon-attachments").remove();
@@ -304,7 +296,10 @@ function FormatItemInfo(itemData) {
         } else if (itemData.name == "driver_license") {
             $(".item-info-title").html('<p>'+itemData.label+'</p>')
             $(".item-info-description").html('<p><strong>First Name: </strong><span>' + itemData.info.firstname + '</span></p><p><strong>Last Name: </strong><span>' + itemData.info.lastname + '</span></p><p><strong>Birth Date: </strong><span>' + itemData.info.birthdate + '</span></p><p><strong>Licenses: </strong><span>' + itemData.info.type + '</span></p>');
-        } else if (itemData.name == "lawyerpass") {
+        } else if (itemData.name == "weaponlicense") {
+            $(".item-info-title").html('<p>'+itemData.label+'</p>')
+            $(".item-info-description").html('<p><strong>First Name: </strong><span>' + itemData.info.firstname + '</span></p><p><strong>Last Name: </strong><span>' + itemData.info.lastname + '</span></p><p><strong>Birth Date: </strong><span>' + itemData.info.birthdate + '</span></p><p><strong>Licenses: </strong><span>' + itemData.info.type + '</span></p>');
+		} else if (itemData.name == "lawyerpass") {
             $(".item-info-title").html('<p>'+itemData.label+'</p>')
             $(".item-info-description").html('<p><strong>Pass-ID: </strong><span>' + itemData.info.id + '</span></p><p><strong>First Name: </strong><span>' + itemData.info.firstname + '</span></p><p><strong>Last Name: </strong><span>' + itemData.info.lastname + '</span></p><p><strong>CID: </strong><span>' + itemData.info.citizenid + '</span></p>');
         } else if (itemData.name == "harness") {
