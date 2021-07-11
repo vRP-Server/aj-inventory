@@ -1626,7 +1626,7 @@ var requiredItemOpen = false;
                     Inventory.ToggleHotbar(event.data);
                     break;
                 case "RobMoney":
-                    $(".inv-options-list").append('<div class="inv-option-item" id="rob-money"><p>Steal Cash</p></div>');
+                    $(".inv-options-list").append('<center><div style="background-color: #466887;" class="inv-option-item" id="rob-money"><p>Take Cash</p></div>');
                     $("#rob-money").data('TargetId', event.data.TargetId);
                     break;
             }
