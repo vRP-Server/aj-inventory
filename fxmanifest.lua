@@ -1,7 +1,7 @@
-fx_version 'adamant'
+fx_version 'cerulean'
 game 'gta5'
 
-description 'QB-Inventory'
+description 'aj-inventory'
 version '1.0.0'
 
 shared_scripts { 
