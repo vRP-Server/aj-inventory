@@ -12,7 +12,7 @@ Make sure to rename qb-inventory to aj-inventory in qb-shops fxmanifest.lua or i
 
 ## Features
 
-* Features
+* New Look
 * Item crafting
 * Weapon attachment crafting
 * Stashes (Personal and/or Shared)
