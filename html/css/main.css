@@ -164,8 +164,8 @@ body {
     margin-left: 2px;
     margin-bottom: 2px;
     background-color: rgba(0, 0, 0, 0.123);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-     border-radius: 0px 0px 8px 8px ;
+    border: 0.7px solid #243a4e70;
+     border-radius: 8px 8px 8px 8px ;
     transition: opacity 0.2s;
     opacity: 1.0;
 }
@@ -246,14 +246,14 @@ body {
     line-height: 48px;
     text-transform: uppercase;
     font-size: 1.1vh;
-    font-family: Verdana;
+    font-family: 'Verdana';
 }
 
 .inv-option-item {
     width: 80%;
     height: 50px;
   /*  background-color: rgba(120, 10, 20, 0.3); /* rgba(20, 20, 20, 0.5) */
-    border: 1px solid rgba(255, 255, 255, .01);
+    border: transparent;
     border-radius: 7px;
     color: white;
     transition: background-color .1s linear;
@@ -265,7 +265,7 @@ body {
 
 .btn-combine {
     position: relative;
-    margin-top: 20%;
+    margin-top: 28%;
     width: 80%;
     height: 50px;
     background-color:  #466887; /* rgba(20, 20, 20, 0.5) */
@@ -281,11 +281,11 @@ body {
     line-height: 48px;
     text-transform: uppercase;
     font-size: 1.1vh;
-    font-family: Verdana;
+    font-family: Verdana';
 }
 
 .btn-combine:hover {
-    background-color:rgb(32, 114, 32)
+    background-color:#468746
 }
 
 .item-slot-amount {
@@ -495,8 +495,8 @@ body {
     margin-right: 1vh;
     width: 110px;
     height: 130px;
-    background-color: rgba(255, 0, 0, 0);
-    border: 1px solid rgba(255, 0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 0.7px solid #243a4e70;
 }
 
 #itembox-action {
@@ -516,7 +516,7 @@ body {
     position: absolute;
     bottom: 0;
     width: 100%;
-    background-color: #181E25;
+    background-color: #243a4e70;
     min-height: 2.2vh;
     height: fit-content;
      border-radius: 0px 0px 8px 8px ;
@@ -546,7 +546,7 @@ body {
     width: 110px;
     height: 130px;
     background-color: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid #243a4e70;
     float: left;
     margin-left: 20px;
 }
@@ -565,13 +565,13 @@ body {
     position: absolute;
     bottom:0;
     width: 100%;
-    background-color: #181E25;
+    background-color: #243a4e70;
     height: 21px;
 }
 
 #requiredItem-label > p {
     color: #ffffff;
-    font-size: 11px;
+    font-size: 10px;
     text-align: center;
     text-transform: uppercase;
     line-height: 19px;
@@ -609,7 +609,7 @@ body {
     margin-left: 2px;
     margin-bottom: 2px;
     background-color: rgba(0, 0, 0, 0.123);;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid #243a4e70;
     transition: opacity 0.2s;
     opacity: 1.0;
 }
@@ -914,7 +914,7 @@ body {
 }
 
 .weapon-attachments-back:hover {
-    background-color: rgb(18, 18, 18);
+    background-color: #4668877c;
 }
 
 @keyframes ShakeEffect {
