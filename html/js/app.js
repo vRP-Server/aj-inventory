@@ -1317,7 +1317,7 @@ var requiredItemOpen = false;
             requiredItemOpen = false;
         }
 
-        $("#qbus-inventory").fadeIn(500);
+        $("#qbus-inventory").fadeIn(400);
         if(data.other != null && data.other != "") {
             $(".other-inventory").attr("data-inventory", data.other.name);
         } else {

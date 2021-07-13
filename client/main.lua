@@ -382,22 +382,28 @@ function GetClosestPlayer()
 end
 
 RegisterNUICallback("GiveItem", function(data, cb)
-    local player, distance = GetClosestPlayer()
-    if player ~= -1 and distance < 2.5 then
-        local playerPed = GetPlayerPed(player)
-        local playerId = GetPlayerServerId(player)
-        local plyCoords = GetEntityCoords(playerPed)
-        local pos = GetEntityCoords(GetPlayerPed(-1))
-        local dist = GetDistanceBetweenCoords(pos.x, pos.y, pos.z, plyCoords.x, plyCoords.y, plyCoords.z, true)
-        if dist < 2.5 then
-            SetCurrentPedWeapon(PlayerPedId(),'WEAPON_UNARMED',true)
-            TriggerServerEvent("inventory:server:GiveItem", playerId, data.inventory, data.item, data.amount)
-            print(data.amount)
-        else
-            QBCore.Functions.Notify("No one nearby!", "error")
-        end
+    if not isCrafting then
+        QBCore.Functions.GetPlayerData(function(PlayerData)
+            local player, distance = GetClosestPlayer()
+            if player ~= -1 and distance < 2.5 then
+                local playerPed = GetPlayerPed(player)
+                local playerId = GetPlayerServerId(player)
+                local plyCoords = GetEntityCoords(playerPed)
+                local pos = GetEntityCoords(GetPlayerPed(-1))
+                local dist = GetDistanceBetweenCoords(pos.x, pos.y, pos.z, plyCoords.x, plyCoords.y, plyCoords.z, true)
+                if dist < 2.5 and not PlayerData.metadata["isdead"] and not PlayerData.metadata["inlaststand"] and not PlayerData.metadata["ishandcuffed"] and not IsPauseMenuActive() then
+                    SetCurrentPedWeapon(PlayerPedId(),'WEAPON_UNARMED',true)
+                    TriggerServerEvent("inventory:server:GiveItem", playerId, data.inventory, data.item, data.amount)
+                    print(data.amount)
+                else
+                    QBCore.Functions.Notify("No one nearby!", "error")
+                end
+            else
+                QBCore.Functions.Notify("No one nearby!", "error")
+            end
+        end)
     else
-        QBCore.Functions.Notify("No one nearby!", "error")
+        QBCore.Functions.Notify("Cant give item!", "error")
     end
 end)
 
