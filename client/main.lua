@@ -17,11 +17,13 @@ local showTrunkPos = false
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded')
 AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
+    isLoggedIn = true
     LocalPlayer.state:set("inv_busy", false, true)
 end)
 
 RegisterNetEvent("QBCore:Client:OnPlayerUnload")
 AddEventHandler("QBCore:Client:OnPlayerUnload", function()
+    isLoggedIn = false
     LocalPlayer.state:set("inv_busy", true, true)
 end)
 
@@ -338,6 +340,8 @@ end)
 RegisterNetEvent("inventory:client:OpenInventory")
 AddEventHandler("inventory:client:OpenInventory", function(PlayerAmmo, inventory, other)
     if not IsEntityDead(PlayerPedId()) then
+        TriggerEvent('randPickupAnim')
+        Wait(300) -- Lets inv fully fade out before opening again
         ToggleHotbar(false)
         SetNuiFocus(true, true)
         if other ~= nil then
@@ -353,7 +357,47 @@ AddEventHandler("inventory:client:OpenInventory", function(PlayerAmmo, inventory
             maxammo = Config.MaximumAmmoValues,
         })
         inInventory = true
-        TriggerEvent('randPickupAnim')
+    end
+end)
+
+function GetClosestPlayer()
+    local closestPlayers = QBCore.Functions.GetPlayersFromCoords()
+    local closestDistance = -1
+    local closestPlayer = -1
+    local coords = GetEntityCoords(GetPlayerPed(-1))
+
+    for i=1, #closestPlayers, 1 do
+        if closestPlayers[i] ~= PlayerId() then
+            local pos = GetEntityCoords(GetPlayerPed(closestPlayers[i]))
+            local distance = GetDistanceBetweenCoords(pos.x, pos.y, pos.z, coords.x, coords.y, coords.z, true)
+
+            if closestDistance == -1 or closestDistance > distance then
+                closestPlayer = closestPlayers[i]
+                closestDistance = distance
+            end
+        end
+	end
+
+	return closestPlayer, closestDistance
+end
+
+RegisterNUICallback("GiveItem", function(data, cb)
+    local player, distance = GetClosestPlayer()
+    if player ~= -1 and distance < 2.5 then
+        local playerPed = GetPlayerPed(player)
+        local playerId = GetPlayerServerId(player)
+        local plyCoords = GetEntityCoords(playerPed)
+        local pos = GetEntityCoords(GetPlayerPed(-1))
+        local dist = GetDistanceBetweenCoords(pos.x, pos.y, pos.z, plyCoords.x, plyCoords.y, plyCoords.z, true)
+        if dist < 2.5 then
+            SetCurrentPedWeapon(PlayerPedId(),'WEAPON_UNARMED',true)
+            TriggerServerEvent("inventory:server:GiveItem", playerId, data.inventory, data.item, data.amount)
+            print(data.amount)
+        else
+            QBCore.Functions.Notify("No one nearby!", "error")
+        end
+    else
+        QBCore.Functions.Notify("No one nearby!", "error")
     end
 end)
 

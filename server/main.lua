@@ -72,6 +72,23 @@ AddEventHandler('inventory:server:SetIsOpenState', function(IsOpen, type, id)
 	end
 end)
 
+RegisterServerEvent("inventory:server:GiveItem")
+AddEventHandler('inventory:server:GiveItem', function(name, inventory, item, amount)
+	local src = source
+	local Player = QBCore.Functions.GetPlayer(src)
+	local OtherPlayer = QBCore.Functions.GetPlayer(tonumber(name))
+	local Target = OtherPlayer.PlayerData.charinfo.firstname..' '..OtherPlayer.PlayerData.charinfo.lastname
+	local YourName = Player.PlayerData.charinfo.firstname..' '..Player.PlayerData.charinfo.lastname
+	if amount ~= 0 then
+		if Player.Functions.RemoveItem(item.name, amount,false, item.info) and OtherPlayer.Functions.AddItem(item.name, amount,false, item.info) then
+			TriggerClientEvent('QBCore:Notify', src, "You Sent "..item.label..' To '..Target)
+			TriggerClientEvent('inventory:client:ItemBox',src, QBCore.Shared.Items[item.name], "remove")
+			TriggerClientEvent('QBCore:Notify', name, "You Received "..item.label..' From '..YourName)
+			TriggerClientEvent('inventory:client:ItemBox',name, QBCore.Shared.Items[item.name], "add")
+		end
+	end
+end)
+
 RegisterServerEvent("inventory:server:OpenInventory")
 AddEventHandler('inventory:server:OpenInventory', function(name, id, other)
 	local src = source
