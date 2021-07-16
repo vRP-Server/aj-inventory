@@ -1,3 +1,6 @@
+--QBCore = nil
+--TriggerEvent('QBCore:GetObject', function(obj) QBCore = obj end) --uncomment these two lines if you use an older version of qb-core
+
 Drops = {}
 Trunks = {}
 Gloveboxes = {}
@@ -78,12 +81,12 @@ AddEventHandler('inventory:server:GiveItem', function(name, inventory, item, amo
 	local Player = QBCore.Functions.GetPlayer(src)
 	local OtherPlayer = QBCore.Functions.GetPlayer(tonumber(name))
 	local Target = OtherPlayer.PlayerData.charinfo.firstname..' '..OtherPlayer.PlayerData.charinfo.lastname
-	local YourName = Player.PlayerData.charinfo.firstname..' '..Player.PlayerData.charinfo.lastname
+	local Sender = Player.PlayerData.charinfo.firstname..' '..Player.PlayerData.charinfo.lastname
 	if amount ~= 0 then
 		if Player.Functions.RemoveItem(item.name, amount,false, item.info) and OtherPlayer.Functions.AddItem(item.name, amount,false, item.info) then
 			TriggerClientEvent('QBCore:Notify', src, "You gave " ..amount.. ' '..item.label..' to '..Target)
 			TriggerClientEvent('inventory:client:ItemBox',src, QBCore.Shared.Items[item.name], "remove")
-			TriggerClientEvent('QBCore:Notify', name, "You got " ..amount.. ' ' ..item.label..' from '..YourName)
+			TriggerClientEvent('QBCore:Notify', name, "You got " ..amount.. ' ' ..item.label..' from '..Sender)
 			TriggerClientEvent('inventory:client:ItemBox',name, QBCore.Shared.Items[item.name], "add")
 		else
 			TriggerClientEvent('QBCore:Notify', src, "Cant give item!", "error")
@@ -524,7 +527,7 @@ AddEventHandler('inventory:server:SetInventoryData', function(fromInventory, toI
 					local itemInfo = QBCore.Shared.Items[fromItemData.name:lower()]
 					AddToDrop(toInventory, toSlot, itemInfo["name"], fromAmount, fromItemData.info)
 					if itemInfo["name"] == "radio" then
-						TriggerClientEvent('qb-radio:onRadioDrop', src)
+						TriggerClientEvent('Radio.Set', src, false)
 					end
 				end
 			end
@@ -849,7 +852,7 @@ AddEventHandler('inventory:server:SetInventoryData', function(fromInventory, toI
 						Player.Functions.RemoveItem(toItemData.name, toAmount, toSlot)
 						AddToDrop(fromInventory, toSlot, itemInfo["name"], toAmount, toItemData.info)
 						if itemInfo["name"] == "radio" then
-							TriggerClientEvent('qb-radio:onRadioDrop', src)
+							TriggerClientEvent('Radio.Set', src, false)
 						end
 						TriggerEvent("qb-log:server:CreateLog", "drop", "Swapped Item", "orange", "**".. GetPlayerName(src) .. "** (citizenid: *"..Player.PlayerData.citizenid.."* | id: *"..src.."*) swapped item; name: **"..toItemData.name.."**, amount: **" .. toAmount .. "** with item; name: **"..fromItemData.name.."**, amount: **" .. fromAmount .. "** - dropid: *" .. fromInventory .. "*")
 					else
@@ -873,7 +876,7 @@ AddEventHandler('inventory:server:SetInventoryData', function(fromInventory, toI
 						RemoveFromDrop(toInventory, toSlot, itemInfo["name"], toAmount)
 						AddToDrop(fromInventory, fromSlot, itemInfo["name"], toAmount, toItemData.info)
 						if itemInfo["name"] == "radio" then
-							TriggerClientEvent('qb-radio:onRadioDrop', src)
+							TriggerClientEvent('Radio.Set', src, false)
 						end
 					end
 				else
@@ -882,7 +885,7 @@ AddEventHandler('inventory:server:SetInventoryData', function(fromInventory, toI
 				local itemInfo = QBCore.Shared.Items[fromItemData.name:lower()]
 				AddToDrop(toInventory, toSlot, itemInfo["name"], fromAmount, fromItemData.info)
 				if itemInfo["name"] == "radio" then
-					TriggerClientEvent('qb-radio:onRadioDrop', src)
+					TriggerClientEvent('Radio.Set', src, false)
 				end
 			end
 		else

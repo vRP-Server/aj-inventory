@@ -1,3 +1,5 @@
+--QBCore = nil -- uncomment lines 1-2 and 19-24 if you use an older core of qb-core
+
 inInventory = false
 hotbarOpen = false
 
@@ -13,6 +15,13 @@ local CurrentStash = nil
 local isCrafting = false
 local isHotbar = false
 local showTrunkPos = false
+
+--Citizen.CreateThread(function() 
+--    while QBCore == nil do
+--        TriggerEvent("QBCore:GetObject", function(obj) QBCore = obj end)    -- uncomment lines 1 and 19-24 if you use an older core of qb-core
+--        Citizen.Wait(200)
+--    end
+--end)
 
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded')
@@ -393,8 +402,11 @@ RegisterNUICallback("GiveItem", function(data, cb)
                 local dist = GetDistanceBetweenCoords(pos.x, pos.y, pos.z, plyCoords.x, plyCoords.y, plyCoords.z, true)
                 if dist < 2.5 and not PlayerData.metadata["isdead"] and not PlayerData.metadata["inlaststand"] and not PlayerData.metadata["ishandcuffed"] and not IsPauseMenuActive() then
                     SetCurrentPedWeapon(PlayerPedId(),'WEAPON_UNARMED',true)
+                    TriggerEvent('animations:client:EmoteCommandStart', {"point"})
+                    Wait(750)
+                    TriggerEvent('animations:client:EmoteCommandStart', {"c"})
                     TriggerServerEvent("inventory:server:GiveItem", playerId, data.inventory, data.item, data.amount)
-                    print(data.amount)
+                    --print(data.amount)
                 else
                     QBCore.Functions.Notify("No one nearby!", "error")
                 end
