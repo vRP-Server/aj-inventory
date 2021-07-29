@@ -394,21 +394,20 @@ RegisterNUICallback("GiveItem", function(data, cb)
     if not isCrafting then
         QBCore.Functions.GetPlayerData(function(PlayerData)
             local player, distance = GetClosestPlayer()
-            if player ~= -1 and distance < 2.5 then
+            if player ~= -1 and distance < 2.5 then  --checks distance first
                 local playerPed = GetPlayerPed(player)
                 local playerId = GetPlayerServerId(player)
                 local plyCoords = GetEntityCoords(playerPed)
                 local pos = GetEntityCoords(GetPlayerPed(-1))
                 local dist = GetDistanceBetweenCoords(pos.x, pos.y, pos.z, plyCoords.x, plyCoords.y, plyCoords.z, true)
-                if dist < 2.5 and not PlayerData.metadata["isdead"] and not PlayerData.metadata["inlaststand"] and not PlayerData.metadata["ishandcuffed"] and not IsPauseMenuActive() then
+                if dist < 2.5 and not PlayerData.metadata["isdead"] and not PlayerData.metadata["inlaststand"] and not PlayerData.metadata["ishandcuffed"] and not IsPauseMenuActive() then --checks what the player is doing
                     SetCurrentPedWeapon(PlayerPedId(),'WEAPON_UNARMED',true)
                     TriggerEvent('animations:client:EmoteCommandStart', {"point"})
                     Wait(750)
                     TriggerEvent('animations:client:EmoteCommandStart', {"c"})
                     TriggerServerEvent("inventory:server:GiveItem", playerId, data.inventory, data.item, data.amount)
-                    --print(data.amount)
                 else
-                    QBCore.Functions.Notify("No one nearby!", "error")
+                    QBCore.Functions.Notify("Cant give item!", "error")
                 end
             else
                 QBCore.Functions.Notify("No one nearby!", "error")
@@ -546,7 +545,7 @@ AddEventHandler("inventory:client:UseWeapon", function(weaponData, shootbool)
         TriggerEvent('weapons:client:SetCurrentWeapon', weaponData, shootbool)
         QBCore.Functions.TriggerCallback("weapon:server:GetWeaponAmmo", function(result)
             local ammo = tonumber(result)
-            if weaponName == "weapon_petrolcan" or weaponName == "weapon_fireextinguisher" then 
+            if weaponName == "weapon_petrolcan" or weaponName == "weapon_fireextinguisher" or weaponName == "weapon_hazardcan" then 
                 ammo = 4000 
             end
             GiveWeaponToPed(ped, GetHashKey(weaponName), ammo, false, false)
