@@ -348,7 +348,8 @@ end)
 
 RegisterNetEvent("inventory:client:OpenInventory")
 AddEventHandler("inventory:client:OpenInventory", function(PlayerAmmo, inventory, other)
-    if not IsEntityDead(PlayerPedId()) then
+    if not IsEntityDead(PlayerPedId()) and not inInventory then
+        inInventory = true
         TriggerEvent('randPickupAnim')
         Wait(300) -- Lets inv fully fade out before opening again
         ToggleHotbar(false)
@@ -738,32 +739,35 @@ RegisterNUICallback('getCombineItem', function(data, cb)
 end)
 
 RegisterNUICallback("CloseInventory", function(data, cb)
-    if currentOtherInventory == "none-inv" then
-        CurrentDrop = 0
-        CurrentVehicle = nil
-        CurrentGlovebox = nil
-        CurrentStash = nil
+    if not IsEntityDead(PlayerPedId()) and inInventory then
+        inInventory = false
+        if currentOtherInventory == "none-inv" then
+            CurrentDrop = 0
+            CurrentVehicle = nil
+            CurrentGlovebox = nil
+            CurrentStash = nil
+            SetNuiFocus(false, false)
+            inInventory = false
+            ClearPedTasks(PlayerPedId())
+            return
+        end
+        if CurrentVehicle ~= nil then
+            CloseTrunk()
+            TriggerServerEvent("inventory:server:SaveInventory", "trunk", CurrentVehicle)
+            CurrentVehicle = nil
+        elseif CurrentGlovebox ~= nil then
+            TriggerServerEvent("inventory:server:SaveInventory", "glovebox", CurrentGlovebox)
+            CurrentGlovebox = nil
+        elseif CurrentStash ~= nil then
+            TriggerServerEvent("inventory:server:SaveInventory", "stash", CurrentStash)
+            CurrentStash = nil
+        else
+            TriggerServerEvent("inventory:server:SaveInventory", "drop", CurrentDrop)
+            CurrentDrop = 0
+        end
         SetNuiFocus(false, false)
         inInventory = false
-        ClearPedTasks(PlayerPedId())
-        return
     end
-    if CurrentVehicle ~= nil then
-        CloseTrunk()
-        TriggerServerEvent("inventory:server:SaveInventory", "trunk", CurrentVehicle)
-        CurrentVehicle = nil
-    elseif CurrentGlovebox ~= nil then
-        TriggerServerEvent("inventory:server:SaveInventory", "glovebox", CurrentGlovebox)
-        CurrentGlovebox = nil
-    elseif CurrentStash ~= nil then
-        TriggerServerEvent("inventory:server:SaveInventory", "stash", CurrentStash)
-        CurrentStash = nil
-    else
-        TriggerServerEvent("inventory:server:SaveInventory", "drop", CurrentDrop)
-        CurrentDrop = 0
-    end
-    SetNuiFocus(false, false)
-    inInventory = false
 end)
 
 RegisterNUICallback("UseItem", function(data, cb)

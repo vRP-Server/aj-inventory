@@ -127,7 +127,7 @@ AddEventHandler('inventory:server:OpenInventory', function(name, id, other)
 				if Stashes[id] ~= nil and Stashes[id].isOpen then
 					secondInv.name = "none-inv"
 					secondInv.label = "Error#7177"
-					secondInv.maxweight = 1000000
+					secondInv.maxweight = 0
 					secondInv.inventory = {}
 					secondInv.slots = 0
 				else
@@ -164,7 +164,7 @@ AddEventHandler('inventory:server:OpenInventory', function(name, id, other)
 				if (Trunks[id] ~= nil and Trunks[id].isOpen) or (QBCore.Shared.SplitStr(id, "PLZI")[2] ~= nil and Player.PlayerData.job.name ~= "police") then
 					secondInv.name = "none-inv"
 					secondInv.label = "Error#5293"
-					secondInv.maxweight = other.maxweight ~= nil and other.maxweight or 60000
+					secondInv.maxweight = 0
 					secondInv.inventory = {}
 					secondInv.slots = 0
 				else
@@ -207,7 +207,7 @@ AddEventHandler('inventory:server:OpenInventory', function(name, id, other)
 				if Gloveboxes[id] ~= nil and Gloveboxes[id].isOpen then
 					secondInv.name = "none-inv"
 					secondInv.label = "Error#9918"
-					secondInv.maxweight = 10000
+					secondInv.maxweight = 0
 					secondInv.inventory = {}
 					secondInv.slots = 0
 				else
