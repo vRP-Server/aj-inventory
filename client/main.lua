@@ -350,6 +350,7 @@ RegisterNetEvent("inventory:client:OpenInventory")
 AddEventHandler("inventory:client:OpenInventory", function(PlayerAmmo, inventory, other)
     if not IsEntityDead(PlayerPedId()) and not inInventory then
         inInventory = true
+        Wait(175)
         TriggerEvent('randPickupAnim')
         Wait(300) -- Lets inv fully fade out before opening again
         ToggleHotbar(false)
@@ -746,9 +747,9 @@ RegisterNUICallback("CloseInventory", function(data, cb)
             CurrentVehicle = nil
             CurrentGlovebox = nil
             CurrentStash = nil
-            SetNuiFocus(false, false)
             inInventory = false
             ClearPedTasks(PlayerPedId())
+            SetNuiFocus(false, false)
             return
         end
         if CurrentVehicle ~= nil then
