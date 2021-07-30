@@ -136,7 +136,7 @@ $(document).on("click", ".item-slot", function(e){
             if ((ItemData.name).split("_")[0] == "weapon") {
                 if (!$("#weapon-attachments").length) {
                     // if (ItemData.info.attachments !== null && ItemData.info.attachments !== undefined && ItemData.info.attachments.length > 0) {
-                    $(".inv-options-list").append('<div class="inv-option-item" id="weapon-attachments"><p>ATTACHMENTS</p></div>');
+                        $(".inv-options-list").append('<center><div style="background-color: #466887;" class="inv-option-item" id="weapon-attachments"><p>ATTACHMENTS</p></div></center>');
                     $("#weapon-attachments").hide().fadeIn(250);
                     ClickedItemData = ItemData;
                     // }
@@ -460,7 +460,7 @@ function handleDragDrop() {
             setTimeout(function(){
                 IsDragging = false;
             }, 300)
-            $(this).css("background", "rgba(235, 235, 235, 0.03)");
+            $(this).css("background", "rgba(0, 0, 0, 0.123)");
             $(this).find("img").css("filter", "brightness(100%)");
             $("#item-use").css("background", "transparent");  /* I feel like this is important */
         },
@@ -534,6 +534,12 @@ function handleDragDrop() {
         Inventory.Close();
     });
 
+//    $(document).on('click', '.inv-container', function(e){
+//        e.preventDefault();
+//        $.post("https://aj-inventory/CloseInventory", JSON.stringify({}));
+//        Inventory.Close();
+//    }); 
+//
     $("#item-drop").droppable({
         hoverClass: 'item-slot-hoverClass',
         drop: function(event, ui) {
@@ -925,7 +931,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                     $.post('https://aj-inventory/getCombineItem', JSON.stringify({item: toData.combinable.reward}), function(item){
                         $('.combine-option-text').html("<p>If you combine these items you get: <b>"+item.label+"</b></p>");
                     })
-                    $(".combine-option-container").fadeIn(100);
+                    $(".combine-option-container").fadeIn(200);
                     combineslotData = []
                     combineslotData.fromData = fromData
                     combineslotData.toData = toData
@@ -1337,7 +1343,7 @@ var requiredItemOpen = false;
             requiredItemOpen = false;
         }
 
-        $("#qbus-inventory").fadeIn(400);
+        $("#qbus-inventory").fadeIn(200);
         if(data.other != null && data.other != "") {
             $(".other-inventory").attr("data-inventory", data.other.name);
         } else {
@@ -1555,9 +1561,9 @@ var requiredItemOpen = false;
                     Inventory.QualityCheck(item, true, false);
                 }
             });
-            $(".z-hotbar-inventory").fadeIn(750);
+            $(".z-hotbar-inventory").fadeIn(500);
         } else {
-            $(".z-hotbar-inventory").fadeOut(150, function(){
+            $(".z-hotbar-inventory").fadeOut(200, function(){
                 $(".z-hotbar-inventory").html("");
             });
         }
@@ -1565,12 +1571,12 @@ var requiredItemOpen = false;
 
     Inventory.UseItem = function(data) {
         $(".itembox-container").hide();
-        $(".itembox-container").fadeIn(250);
+        $(".itembox-container").fadeIn(200);
         $("#itembox-action").html("<p>Used</p>");
         $("#itembox-label").html("<p>"+data.item.label+"</p>");
         $("#itembox-image").html('<div class="item-slot-img"><img src="images/' + data.item.image + '" alt="' + data.item.name + '" /></div>')
         setTimeout(function(){
-            $(".itembox-container").fadeOut(250);
+            $(".itembox-container").fadeOut(200);
         }, 2000)
     };
 
@@ -1611,12 +1617,12 @@ var requiredItemOpen = false;
                     var element = '<div class="requiredItem-box"><div id="requiredItem-action">Required</div><div id="requiredItem-label"><p>'+item.label+'</p></div><div id="requiredItem-image"><div class="item-slot-img"><img src="images/' + item.image + '" alt="' + item.name + '" /></div></div></div>'
                     $(".requiredItem-container").hide();
                     $(".requiredItem-container").append(element);
-                    $(".requiredItem-container").fadeIn(100);
+                    $(".requiredItem-container").fadeIn(200);
                 });
                 requiredItemOpen = true;
             }
         } else {
-            $(".requiredItem-container").fadeOut(100);
+            $(".requiredItem-container").fadeOut(200);
             requiredTimeout = setTimeout(function(){
                 $(".requiredItem-container").html("");
                 requiredItemOpen = false;

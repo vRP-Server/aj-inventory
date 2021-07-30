@@ -5,7 +5,7 @@ description 'aj-inventory'
 version '1.0.0'
 
 shared_scripts { 
-	'@qb-core/import.lua', --if you use an older qb-core follow what to do here in the README.md
+	'@qb-core/import.lua',
 	'config.lua'
 }
 

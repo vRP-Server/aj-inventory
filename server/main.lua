@@ -1,6 +1,3 @@
---QBCore = nil
---TriggerEvent('QBCore:GetObject', function(obj) QBCore = obj end) --uncomment these two lines if you use an older version of qb-core
-
 Drops = {}
 Trunks = {}
 Gloveboxes = {}

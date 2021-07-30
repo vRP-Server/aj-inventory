@@ -4,6 +4,7 @@
 @import url('https://fonts.googleapis.com/css?family=Balthazar&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Roboto+Slab&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mukta&display=swap');
 
 @font-face {
     font-family: 'Verdana';
@@ -93,8 +94,8 @@ body {
     left: 10.2%;
     width: 31.5%;
     max-width: 31.5%;
-    height: 44.16%;
-    max-height: 44.16%;
+    height: 40.90%;
+    max-height: 40.90%;
     float: left;
     overflow-x: hidden;
     overflow-y: scroll;
@@ -107,8 +108,8 @@ body {
     right: 10.2%;
     width: 31.5%;
     max-width: 31.5%;
-    height: 44.16%;
-    max-height: 44.16%;
+    height: 40.90%;
+    max-height: 40.90%;
     float: left;
     overflow-x: hidden;
     overflow-y: scroll;
@@ -132,7 +133,7 @@ body {
     text-align: left;
     font-size: 1.1vh;
     line-height: 1.8vh;
-    font-family: 'Verdana Bold'
+    font-family: 'Mukta'
 }
 
 .inv-options {
@@ -265,7 +266,7 @@ body {
 
 .btn-combine {
     position: relative;
-    margin-top: 28%;
+    margin-top: 22%;
     width: 80%;
     height: 50px;
     background-color:  #466887; /* rgba(20, 20, 20, 0.5) */
@@ -379,8 +380,8 @@ body {
 #player-inv-label {
     position: relative;
     color: white;
-    font-size: 25px;
-    font-family: 'Lato', monospace;
+    font-size: 27px;
+    font-family: 'Mukta', monospace;
     font-weight: bold;
     letter-spacing: 0.1vh;
     bottom: 15px;
@@ -388,18 +389,21 @@ body {
 }
 
 #player-inv-weight {
+    position: relative;
     color: rgb(255, 255, 255);
     font-size: 12px;
-    font-family: 'Lato', monospace;
+    font-family: 'Mukta', monospace;
     letter-spacing: 0.1vh;
+    bottom: 18px;
+    left: 30px;
     float: left;
 }
 
 #other-inv-label {
     position: relative;
     color: white;
-    font-size: 25px;
-    font-family: 'Lato', monospace;
+    font-size: 27px;
+    font-family: 'Mukta', monospace;
     font-weight: bold;
     letter-spacing: 0.1vh;
     bottom: 15px;
@@ -407,10 +411,13 @@ body {
 }
 
 #other-inv-weight {
-    color: white;
+    position: relative;
+    color: rgb(255, 255, 255);
     font-size: 12px;
-    font-family: 'Lato', monospace;
+    font-family: 'Mukta', monospace;
     letter-spacing: 0.1vh;
+    bottom: 18px;
+    left: 30px;
     float: left;
 }
 
@@ -448,9 +455,9 @@ body {
 
 .item-info-title {
     font-family: sans-serif;
-    font-size: 1.8vh;
+    font-size: 2.0vh;
     color: white;
-    font-family: 'Open Sans';
+    font-family: 'Mukta';
     padding-top: 5px;
     padding-left: 5px;
 }
