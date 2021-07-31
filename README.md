@@ -1,5 +1,6 @@
 # aj-inventory
 
+* if you used qb-inventory before switching to this you dont need the SQL
 * Make sure to rename qb-inventory to aj-inventory in qb-shops fxmanifest.lua or it may not work
 
 ## IMPORTANT
