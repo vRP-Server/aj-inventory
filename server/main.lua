@@ -123,8 +123,8 @@ AddEventHandler('inventory:server:OpenInventory', function(name, id, other)
 				secondInv.slots = slots
 				if Stashes[id] ~= nil and Stashes[id].isOpen then
 					secondInv.name = "none-inv"
-					secondInv.label = "Error#7177"
-					secondInv.maxweight = 0
+					secondInv.label = "Stash-None"
+					secondInv.maxweight = 1000000
 					secondInv.inventory = {}
 					secondInv.slots = 0
 				else
@@ -160,8 +160,8 @@ AddEventHandler('inventory:server:OpenInventory', function(name, id, other)
 				secondInv.slots = other.slots ~= nil and other.slots or 50
 				if (Trunks[id] ~= nil and Trunks[id].isOpen) or (QBCore.Shared.SplitStr(id, "PLZI")[2] ~= nil and Player.PlayerData.job.name ~= "police") then
 					secondInv.name = "none-inv"
-					secondInv.label = "Error#5293"
-					secondInv.maxweight = 0
+					secondInv.label = "Trunk-None"
+					secondInv.maxweight = other.maxweight ~= nil and other.maxweight or 60000
 					secondInv.inventory = {}
 					secondInv.slots = 0
 				else
@@ -203,8 +203,8 @@ AddEventHandler('inventory:server:OpenInventory', function(name, id, other)
 				secondInv.slots = 5
 				if Gloveboxes[id] ~= nil and Gloveboxes[id].isOpen then
 					secondInv.name = "none-inv"
-					secondInv.label = "Error#9918"
-					secondInv.maxweight = 0
+					secondInv.label = "Glovebox-None"
+					secondInv.maxweight = 10000
 					secondInv.inventory = {}
 					secondInv.slots = 0
 				else
@@ -269,16 +269,16 @@ AddEventHandler('inventory:server:OpenInventory', function(name, id, other)
 			else
 				if Drops[id] ~= nil and not Drops[id].isOpen then
 					secondInv.name = id
-					secondInv.label = "Ground-"..tostring(id)
-					secondInv.maxweight = 300000
+					secondInv.label = "Dropped-"..tostring(id)
+					secondInv.maxweight = 100000
 					secondInv.inventory = Drops[id].items
 					secondInv.slots = 30
 					Drops[id].isOpen = src
 					Drops[id].label = secondInv.label
 				else
 					secondInv.name = "none-inv"
-					secondInv.label = "ERROR#0000"
-					secondInv.maxweight = 0
+					secondInv.label = "Dropped-None"
+					secondInv.maxweight = 100000
 					secondInv.inventory = {}
 					secondInv.slots = 0
 					--Drops[id].label = secondInv.label
@@ -788,15 +788,12 @@ AddEventHandler('inventory:server:SetInventoryData', function(fromInventory, toI
 				TriggerClientEvent('qb-shops:client:UpdateShop', src, QBCore.Shared.SplitStr(shopType, "_")[2], itemData, fromAmount)
 				TriggerClientEvent('QBCore:Notify', src, itemInfo["label"] .. " bought!", "success")
 				TriggerEvent("qb-log:server:CreateLog", "shops", "Shop item bought", "green", "**"..GetPlayerName(src) .. "** bought a " .. itemInfo["label"] .. " for $"..price)
-
---Uncomment The stuff below if you want it so stuff likes shops will take from your bank account if you dont have enough cash on hand
-
-			--elseif bankBalance >= price then
-			--	Player.Functions.RemoveMoney("bank", price, "itemshop-bought-item")
-			--	Player.Functions.AddItem(itemData.name, fromAmount, toSlot, itemData.info)
-			--	TriggerClientEvent('qb-shops:client:UpdateShop', src, QBCore.Shared.SplitStr(shopType, "_")[2], itemData, fromAmount)
-			--	TriggerClientEvent('QBCore:Notify', src, itemInfo["label"] .. " bought!", "success")
-			--	TriggerEvent("qb-log:server:CreateLog", "shops", "Shop item bought", "green", "**"..GetPlayerName(src) .. "** bought a " .. itemInfo["label"] .. " for $"..price)
+			elseif bankBalance >= price then
+				Player.Functions.RemoveMoney("bank", price, "itemshop-bought-item")
+				Player.Functions.AddItem(itemData.name, fromAmount, toSlot, itemData.info)
+				TriggerClientEvent('qb-shops:client:UpdateShop', src, QBCore.Shared.SplitStr(shopType, "_")[2], itemData, fromAmount)
+				TriggerClientEvent('QBCore:Notify', src, itemInfo["label"] .. " bought!", "success")
+				TriggerEvent("qb-log:server:CreateLog", "shops", "Shop item bought", "green", "**"..GetPlayerName(src) .. "** bought a " .. itemInfo["label"] .. " for $"..price)
 			else
 				TriggerClientEvent('QBCore:Notify', src, "You don't have enough cash..", "error")
 			end
@@ -805,14 +802,11 @@ AddEventHandler('inventory:server:SetInventoryData', function(fromInventory, toI
 				Player.Functions.AddItem(itemData.name, fromAmount, toSlot, itemData.info)
 				TriggerClientEvent('QBCore:Notify', src, itemInfo["label"] .. " bought!", "success")
 				TriggerEvent("qb-log:server:CreateLog", "shops", "Shop item bought", "green", "**"..GetPlayerName(src) .. "** bought a " .. itemInfo["label"] .. " for $"..price)
-
---Uncomment The stuff below if you want it so stuff likes shops will take from your bank account if you dont have enough cash on hand
-
-			--elseif bankBalance >= price then
-			--	Player.Functions.RemoveMoney("bank", price, "unkown-itemshop-bought-item")
-			--	Player.Functions.AddItem(itemData.name, fromAmount, toSlot, itemData.info)
-			--	TriggerClientEvent('QBCore:Notify', src, itemInfo["label"] .. " bought!", "success")
-			--	TriggerEvent("qb-log:server:CreateLog", "shops", "Shop item bought", "green", "**"..GetPlayerName(src) .. "** bought a " .. itemInfo["label"] .. " for $"..price)
+			elseif bankBalance >= price then
+				Player.Functions.RemoveMoney("bank", price, "unkown-itemshop-bought-item")
+				Player.Functions.AddItem(itemData.name, fromAmount, toSlot, itemData.info)
+				TriggerClientEvent('QBCore:Notify', src, itemInfo["label"] .. " bought!", "success")
+				TriggerEvent("qb-log:server:CreateLog", "shops", "Shop item bought", "green", "**"..GetPlayerName(src) .. "** bought a " .. itemInfo["label"] .. " for $"..price)
 			else
 				TriggerClientEvent('QBCore:Notify', src, "You don\'t have enough cash..", "error")
 			end
@@ -1410,7 +1404,7 @@ function CreateNewDrop(source, fromSlot, toSlot, itemAmount)
 		TriggerClientEvent("inventory:client:DropItemAnim", source)
 		TriggerClientEvent("inventory:client:AddDropItem", -1, dropId, source, coords)
 		if itemData.name:lower() == "radio" then
-			TriggerClientEvent('qb-radio:onRadioDrop', source)
+			TriggerClientEvent('Radio.Set', source, false)
 		end
 	else
 		TriggerClientEvent("QBCore:Notify", src, "You don't have this item!", "error")
@@ -1439,7 +1433,7 @@ QBCore.Commands.Add("resetinv", "Reset Inventory (Admin Only)", {{name="type", h
 			TriggerClientEvent('QBCore:Notify', source,  "Not a valid type..", "error")
 		end
 	else
-		TriggerClientEvent('QBCore:Notify', source,  "Args not filled out correctly..", "error")
+		TriggerClientEvent('QBCore:Notify', source,  "Argumenten not filled out correctly..", "error")
 	end
 end, "admin")
 
@@ -1492,7 +1486,7 @@ QBCore.Commands.Add("giveitem", "Give An Item (Admin Only)", {{name="id", help="
 			TriggerClientEvent('QBCore:Notify', source,  "Invalid Amount", "error")
 		end
 	else
-		TriggerClientEvent('QBCore:Notify', source,  "Invalid Player ID", "error")
+		TriggerClientEvent('QBCore:Notify', source,  "Player Is Not Online", "error")
 	end
 end, "admin")
 
@@ -1557,19 +1551,4 @@ QBCore.Functions.CreateUseableItem("id_card", function(source, item)
 			})
 		end
 	end
-end)
-
-QBCore.Functions.CreateUseableItem("weaponlicense", function(source, item)
-    for k, v in pairs(QBCore.Functions.GetPlayers()) do
-        local character = QBCore.Functions.GetPlayer(source)
-        local PlayerPed = GetPlayerPed(source)
-        local TargetPed = GetPlayerPed(v)
-        local dist = #(GetEntityCoords(PlayerPed) - GetEntityCoords(TargetPed))
-        if dist < 3.0 then
-            TriggerClientEvent('chat:addMessage', v,  {
-                template = '<div class="chat-message advert"><div class="chat-message-body"><strong>{0}:</strong><br><br> <strong>First Name:</strong> {1} <br><strong>Last Name:</strong> {2} <br><strong>Birth Date:</strong> {3} <br><strong>Licenses:</strong> {4}</div></div>',
-                args = {'Weapons License', character.PlayerData.charinfo.firstname, character.PlayerData.charinfo.lastname, character.PlayerData.charinfo.birthdate, item.info.type}
-            })
-        end
-    end
 end)

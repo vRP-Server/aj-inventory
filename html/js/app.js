@@ -55,10 +55,10 @@ $(document).on('keyup', function(){
 $(document).on("mouseenter", ".item-slot", function(e){
     e.preventDefault();
     if ($(this).data("item") != null) {
-        $(".ply-iteminfo-container").fadeIn(500);
+        $(".ply-iteminfo-container").fadeIn(150);
         FormatItemInfo($(this).data("item"));
     } else {
-        $(".ply-iteminfo-container").fadeOut(500);
+        $(".ply-iteminfo-container").fadeOut(100);
     }
 });
 
@@ -78,7 +78,7 @@ function GetFirstFreeSlot($toInv, $fromSlot) {
 function CanQuickMove() {
     var otherinventory = otherLabel.toLowerCase();
     var retval = true;
-    // if (otherinventory == "Ground") {
+    // if (otherinventory == "grond") {
     //     retval = false
     // } else if (otherinventory.split("-")[0] == "dropped") {
     //     retval = false;
@@ -131,6 +131,7 @@ $(document).on('mousedown', '.item-slot', function(event){
 $(document).on("click", ".item-slot", function(e){
     e.preventDefault();
     var ItemData = $(this).data("item");
+
     if (ItemData !== null && ItemData !== undefined) {
         if (ItemData.name !== undefined) {
             if ((ItemData.name).split("_")[0] == "weapon") {
@@ -177,7 +178,9 @@ $(document).on("click", ".item-slot", function(e){
 $(document).on('click', '.weapon-attachments-back', function(e){
     e.preventDefault();
     $("#qbus-inventory").css({"display":"block"});
-    $("#qbus-inventory").animate({left: 0+"vw"}, 200);
+    $("#qbus-inventory").animate({
+        left: 0+"vw"
+    }, 200);
     $(".weapon-attachments-container").animate({
         left: -100+"vw"
     }, 200, function(){
@@ -288,7 +291,9 @@ $(document).on('click', '#weapon-attachments', function(e){
     e.preventDefault();
     if (!Inventory.IsWeaponBlocked(ClickedItemData.name)) {
         $(".weapon-attachments-container").css({"display":"block"})
-        $("#qbus-inventory").animate({left: 100+"vw"}, 200, function(){
+        $("#qbus-inventory").animate({
+            left: 100+"vw"
+        }, 200, function(){
             $("#qbus-inventory").css({"display":"none"})
         });
         $(".weapon-attachments-container").animate({
@@ -312,16 +317,13 @@ function FormatItemInfo(itemData) {
                 gender = "Woman";
             }
             $(".item-info-title").html('<p>'+itemData.label+'</p>')
-            $(".item-info-description").html('<p><strong>CID: </strong><span>' + itemData.info.citizenid + '</span></p><p><strong>First Name: </strong><span>' + itemData.info.firstname + '</span></p><p><strong>Last Name: </strong><span>' + itemData.info.lastname + '</span></p><p><strong>Birth Date: </strong><span>' + itemData.info.birthdate + '</span></p><p><strong>Gender: </strong><span>' + gender + '</span></p><p><strong>Nationality: </strong><span>' + itemData.info.nationality + '</span></p>');
+            $(".item-info-description").html('<p><strong>CSN: </strong><span>' + itemData.info.citizenid + '</span></p><p><strong>First Name: </strong><span>' + itemData.info.firstname + '</span></p><p><strong>Last Name: </strong><span>' + itemData.info.lastname + '</span></p><p><strong>Birth Date: </strong><span>' + itemData.info.birthdate + '</span></p><p><strong>Gender: </strong><span>' + gender + '</span></p><p><strong>Nationality: </strong><span>' + itemData.info.nationality + '</span></p>');
         } else if (itemData.name == "driver_license") {
             $(".item-info-title").html('<p>'+itemData.label+'</p>')
             $(".item-info-description").html('<p><strong>First Name: </strong><span>' + itemData.info.firstname + '</span></p><p><strong>Last Name: </strong><span>' + itemData.info.lastname + '</span></p><p><strong>Birth Date: </strong><span>' + itemData.info.birthdate + '</span></p><p><strong>Licenses: </strong><span>' + itemData.info.type + '</span></p>');
-        } else if (itemData.name == "weaponlicense") {
+        } else if (itemData.name == "lawyerpass") {
             $(".item-info-title").html('<p>'+itemData.label+'</p>')
-            $(".item-info-description").html('<p><strong>First Name: </strong><span>' + itemData.info.firstname + '</span></p><p><strong>Last Name: </strong><span>' + itemData.info.lastname + '</span></p><p><strong>Birth Date: </strong><span>' + itemData.info.birthdate + '</span></p><p><strong>Licenses: </strong><span>' + itemData.info.type + '</span></p>');
-		} else if (itemData.name == "lawyerpass") {
-            $(".item-info-title").html('<p>'+itemData.label+'</p>')
-            $(".item-info-description").html('<p><strong>Pass-ID: </strong><span>' + itemData.info.id + '</span></p><p><strong>First Name: </strong><span>' + itemData.info.firstname + '</span></p><p><strong>Last Name: </strong><span>' + itemData.info.lastname + '</span></p><p><strong>CID: </strong><span>' + itemData.info.citizenid + '</span></p>');
+            $(".item-info-description").html('<p><strong>Pass-ID: </strong><span>' + itemData.info.id + '</span></p><p><strong>First Name: </strong><span>' + itemData.info.firstname + '</span></p><p><strong>Last Name: </strong><span>' + itemData.info.lastname + '</span></p><p><strong>CSN: </strong><span>' + itemData.info.citizenid + '</span></p>');
         } else if (itemData.name == "harness") {
             $(".item-info-title").html('<p>'+itemData.label+'</p>')
             $(".item-info-description").html('<p>'+itemData.info.uses+' uses left.</p>');
@@ -370,7 +372,7 @@ function FormatItemInfo(itemData) {
             $(".item-info-description").html('<p><strong>Worth: </strong><span>$' + itemData.info.worth + '</span></p>');
         } else if (itemData.name == "labkey") {
             $(".item-info-title").html('<p>'+itemData.label+'</p>')
-            $(".item-info-description").html('<p>A key with the number ' + itemData.info.lab + ' engraved into it' + '</p>');
+            $(".item-info-description").html('<p>Lab: ' + itemData.info.lab + '</p>');
         } else {
             $(".item-info-title").html('<p>'+itemData.label+'</p>')
             $(".item-info-description").html('<p>' + itemData.description + '</p>')
@@ -508,6 +510,7 @@ function handleDragDrop() {
             }
         }
     });
+
     $("#item-give").droppable({
         hoverClass: 'button-hover',
         drop: function(event, ui) {
@@ -791,7 +794,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                             qualityLabel = (newData.info.quality);
                         }
                         if (newData.info.quality == 0) {
-                            qualityLabel = "Destroyed";
+                            qualityLabel = "BROKEN";
                         }
                         $toInv.find("[data-slot=" + $toSlot + "]").find(".item-slot-quality-bar").css({
                             "width": qualityLabel + "%",
@@ -857,7 +860,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                             qualityLabel = (newData.info.quality);
                         }
                         if (newData.info.quality == 0) {
-                            qualityLabel = "Destroyed";
+                            qualityLabel = "BROKEN";
                         }
                         $toInv.find("[data-slot=" + $toSlot + "]").find(".item-slot-quality-bar").css({
                             "width": qualityLabel + "%",
@@ -907,7 +910,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                                 qualityLabel = (newDataFrom.info.quality);
                             }
                             if (newDataFrom.info.quality == 0) {
-                                qualityLabel = "Destroyed";
+                                qualityLabel = "BROKEN";
                             }
                             $fromInv.find("[data-slot=" + $fromSlot + "]").find(".item-slot-quality-bar").css({
                                 "width": qualityLabel + "%",
@@ -931,7 +934,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                     $.post('https://aj-inventory/getCombineItem', JSON.stringify({item: toData.combinable.reward}), function(item){
                         $('.combine-option-text').html("<p>If you combine these items you get: <b>"+item.label+"</b></p>");
                     })
-                    $(".combine-option-container").fadeIn(200);
+                    $(".combine-option-container").fadeIn(100);
                     combineslotData = []
                     combineslotData.fromData = fromData
                     combineslotData.toData = toData
@@ -982,7 +985,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                             qualityLabel = (fromData.info.quality);
                         }
                         if (fromData.info.quality == 0) {
-                            qualityLabel = "Destroyed";
+                            qualityLabel = "BROKEN";
                         }
                         $toInv.find("[data-slot=" + $toSlot + "]").find(".item-slot-quality-bar").css({
                             "width": qualityLabel + "%",
@@ -1031,7 +1034,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                                 qualityLabel = (toData.info.quality);
                             }
                             if (toData.info.quality == 0) {
-                                qualityLabel = "Destroyed";
+                                qualityLabel = "BROKEN";
                             }
                             $fromInv.find("[data-slot=" + $fromSlot + "]").find(".item-slot-quality-bar").css({
                                 "width": qualityLabel + "%",
@@ -1124,7 +1127,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                             qualityLabel = (newDataTo.info.quality);
                         }
                         if (newDataTo.info.quality == 0) {
-                            qualityLabel = "Destroyed";
+                            qualityLabel = "BROKEN";
                         }
                         $toInv.find("[data-slot=" + $toSlot + "]").find(".item-slot-quality-bar").css({
                             "width": qualityLabel + "%",
@@ -1188,7 +1191,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                                 qualityLabel = (newDataFrom.info.quality);
                             }
                             if (newDataFrom.info.quality == 0) {
-                                qualityLabel = "Destroyed";
+                                qualityLabel = "BROKEN";
                             }
                             $fromInv.find("[data-slot=" + $fromSlot + "]").find(".item-slot-quality-bar").css({
                                 "width": qualityLabel + "%",
@@ -1241,8 +1244,8 @@ var requiredItemOpen = false;
     Inventory.slots = 40;
 
     Inventory.dropslots = 30;
-    Inventory.droplabel = "Ground";
-    Inventory.dropmaxweight = 500000
+    Inventory.droplabel = "Drop";
+    Inventory.dropmaxweight = 100000
 
     Inventory.Error = function() {
         $.post("https://aj-inventory/PlayDropFail", JSON.stringify({}));
@@ -1250,7 +1253,7 @@ var requiredItemOpen = false;
 
     Inventory.IsWeaponBlocked = function(WeaponName) {
         var DurabilityBlockedWeapons = [ 
-/*          "weapon_pistol_mk2", 
+/*             "weapon_pistol_mk2", 
             "weapon_pistol",
             "weapon_stungun", 
             "weapon_pumpshotgun", 
@@ -1260,6 +1263,7 @@ var requiredItemOpen = false;
             "weapon_flashlight", */
             "weapon_unarmed"
         ]
+
 
         var retval = false;
         $.each(DurabilityBlockedWeapons, function(i, name) {
@@ -1288,7 +1292,7 @@ var requiredItemOpen = false;
                     qualityLabel = (item.info.quality);
                 }
                 if (item.info.quality == 0) {
-                    qualityLabel = "Destroyed";
+                    qualityLabel = "BROKEN";
                     if (!IsOtherInventory) {
                         if (!IsHotbar) {
                             $(".player-inventory").find("[data-slot=" + item.slot + "]").find(".item-slot-quality-bar").css({
@@ -1343,7 +1347,7 @@ var requiredItemOpen = false;
             requiredItemOpen = false;
         }
 
-        $("#qbus-inventory").fadeIn(200);
+        $("#qbus-inventory").fadeIn(300);
         if(data.other != null && data.other != "") {
             $(".other-inventory").attr("data-inventory", data.other.name);
         } else {
@@ -1370,8 +1374,10 @@ var requiredItemOpen = false;
             for(i = 1; i < (Inventory.dropslots + 1); i++) {
                 $(".other-inventory").append('<div class="item-slot" data-slot="' + i + '"><div class="item-slot-img"></div><div class="item-slot-label"><p>&nbsp;</p></div></div>');
             }
+            $(".other-inventory .item-slot").css({
+                "background-color": "rgba(0, 0, 0, 0.123)"
+            });
         }
-
         if (data.inventory !== null) {
             $.each(data.inventory, function (i, item) {
                 if (item != null) {
@@ -1473,8 +1479,8 @@ var requiredItemOpen = false;
         $(".item-slot").css("border", "1px solid rgba(255, 255, 255, 0.1)");
         $(".ply-hotbar-inventory").css("display", "block");
         $(".ply-iteminfo-container").css("display", "none");
-        $("#qbus-inventory").fadeOut(200);
-        $(".combine-option-container").fadeOut(200);
+        $("#qbus-inventory").fadeOut(300);
+        $(".combine-option-container").hide();
         $(".item-slot").remove();
         if ($("#rob-money").length) {
             $("#rob-money").remove();
@@ -1561,9 +1567,9 @@ var requiredItemOpen = false;
                     Inventory.QualityCheck(item, true, false);
                 }
             });
-            $(".z-hotbar-inventory").fadeIn(500);
+            $(".z-hotbar-inventory").fadeIn(150);
         } else {
-            $(".z-hotbar-inventory").fadeOut(200, function(){
+            $(".z-hotbar-inventory").fadeOut(150, function(){
                 $(".z-hotbar-inventory").html("");
             });
         }
@@ -1571,12 +1577,12 @@ var requiredItemOpen = false;
 
     Inventory.UseItem = function(data) {
         $(".itembox-container").hide();
-        $(".itembox-container").fadeIn(200);
+        $(".itembox-container").fadeIn(250);
         $("#itembox-action").html("<p>Used</p>");
         $("#itembox-label").html("<p>"+data.item.label+"</p>");
         $("#itembox-image").html('<div class="item-slot-img"><img src="images/' + data.item.image + '" alt="' + data.item.name + '" /></div>')
         setTimeout(function(){
-            $(".itembox-container").fadeOut(200);
+            $(".itembox-container").fadeOut(250);
         }, 2000)
     };
 
@@ -1598,7 +1604,7 @@ var requiredItemOpen = false;
         $itembox.removeClass('template');
         $itembox.html('<div id="itembox-action"><p>' + type + '</p></div><div id="itembox-label"><p>'+data.item.label+'</p></div><div class="item-slot-img"><img src="images/' + data.item.image + '" alt="' + data.item.name + '" /></div>');
         $(".itemboxes-container").prepend($itembox);
-        $itembox.fadeIn(750);
+        $itembox.fadeIn(250);
         setTimeout(function() {
             $.when($itembox.fadeOut(300)).done(function() {
                 $itembox.remove()
@@ -1617,12 +1623,12 @@ var requiredItemOpen = false;
                     var element = '<div class="requiredItem-box"><div id="requiredItem-action">Required</div><div id="requiredItem-label"><p>'+item.label+'</p></div><div id="requiredItem-image"><div class="item-slot-img"><img src="images/' + item.image + '" alt="' + item.name + '" /></div></div></div>'
                     $(".requiredItem-container").hide();
                     $(".requiredItem-container").append(element);
-                    $(".requiredItem-container").fadeIn(200);
+                    $(".requiredItem-container").fadeIn(100);
                 });
                 requiredItemOpen = true;
             }
         } else {
-            $(".requiredItem-container").fadeOut(200);
+            $(".requiredItem-container").fadeOut(100);
             requiredTimeout = setTimeout(function(){
                 $(".requiredItem-container").html("");
                 requiredItemOpen = false;

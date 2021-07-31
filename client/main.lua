@@ -1,6 +1,7 @@
 inInventory = false
 hotbarOpen = false
 
+local inventoryTest = {}
 local currentWeapon = nil
 local CurrentWeaponData = {}
 local currentOtherInventory = nil
@@ -14,15 +15,14 @@ local isCrafting = false
 local isHotbar = false
 local showTrunkPos = false
 
+
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded')
 AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
-    isLoggedIn = true
     LocalPlayer.state:set("inv_busy", false, true)
 end)
 
 RegisterNetEvent("QBCore:Client:OnPlayerUnload")
 AddEventHandler("QBCore:Client:OnPlayerUnload", function()
-    isLoggedIn = false
     LocalPlayer.state:set("inv_busy", true, true)
 end)
 
@@ -148,7 +148,7 @@ RegisterCommand('inventory', function()
                                 curVeh = vehicle
                                 CurrentGlovebox = nil
                             else
-                                QBCore.Functions.Notify("Vehicle is locked", "error")
+                                QBCore.Functions.Notify("Vehicle is locked..", "error")
                                 return
                             end
                         else
@@ -338,11 +338,7 @@ end)
 
 RegisterNetEvent("inventory:client:OpenInventory")
 AddEventHandler("inventory:client:OpenInventory", function(PlayerAmmo, inventory, other)
-    if not IsEntityDead(PlayerPedId()) and not inInventory then
-        inInventory = true
-        Wait(175)
-        TriggerEvent('randPickupAnim')
-        Wait(300) -- Lets inv fully fade out before opening again
+    if not IsEntityDead(PlayerPedId()) then
         ToggleHotbar(false)
         SetNuiFocus(true, true)
         if other ~= nil then
@@ -537,7 +533,7 @@ AddEventHandler("inventory:client:UseWeapon", function(weaponData, shootbool)
         TriggerEvent('weapons:client:SetCurrentWeapon', weaponData, shootbool)
         QBCore.Functions.TriggerCallback("weapon:server:GetWeaponAmmo", function(result)
             local ammo = tonumber(result)
-            if weaponName == "weapon_petrolcan" or weaponName == "weapon_fireextinguisher" or weaponName == "weapon_hazardcan" then 
+            if weaponName == "weapon_petrolcan" or weaponName == "weapon_fireextinguisher" then 
                 ammo = 4000 
             end
             GiveWeaponToPed(ped, GetHashKey(weaponName), ammo, false, false)
@@ -730,37 +726,33 @@ RegisterNUICallback('getCombineItem', function(data, cb)
 end)
 
 RegisterNUICallback("CloseInventory", function(data, cb)
-    if not IsEntityDead(PlayerPedId()) and inInventory then
-        inInventory = false
-        if currentOtherInventory == "none-inv" then
-            CurrentDrop = 0
-            CurrentVehicle = nil
-            CurrentGlovebox = nil
-            CurrentStash = nil
-            inInventory = false
-            ClearPedTasks(PlayerPedId())
-            SetNuiFocus(false, false)
-            return
-        end
-        if CurrentVehicle ~= nil then
-            CloseTrunk()
-            TriggerServerEvent("inventory:server:SaveInventory", "trunk", CurrentVehicle)
-            CurrentVehicle = nil
-        elseif CurrentGlovebox ~= nil then
-            TriggerServerEvent("inventory:server:SaveInventory", "glovebox", CurrentGlovebox)
-            CurrentGlovebox = nil
-        elseif CurrentStash ~= nil then
-            TriggerServerEvent("inventory:server:SaveInventory", "stash", CurrentStash)
-            CurrentStash = nil
-        else
-            TriggerServerEvent("inventory:server:SaveInventory", "drop", CurrentDrop)
-            CurrentDrop = 0
-        end
+    if currentOtherInventory == "none-inv" then
+        CurrentDrop = 0
+        CurrentVehicle = nil
+        CurrentGlovebox = nil
+        CurrentStash = nil
         SetNuiFocus(false, false)
         inInventory = false
+        ClearPedTasks(PlayerPedId())
+        return
     end
+    if CurrentVehicle ~= nil then
+        CloseTrunk()
+        TriggerServerEvent("inventory:server:SaveInventory", "trunk", CurrentVehicle)
+        CurrentVehicle = nil
+    elseif CurrentGlovebox ~= nil then
+        TriggerServerEvent("inventory:server:SaveInventory", "glovebox", CurrentGlovebox)
+        CurrentGlovebox = nil
+    elseif CurrentStash ~= nil then
+        TriggerServerEvent("inventory:server:SaveInventory", "stash", CurrentStash)
+        CurrentStash = nil
+    else
+        TriggerServerEvent("inventory:server:SaveInventory", "drop", CurrentDrop)
+        CurrentDrop = 0
+    end
+    SetNuiFocus(false, false)
+    inInventory = false
 end)
-
 RegisterNUICallback("UseItem", function(data, cb)
     TriggerServerEvent("inventory:server:UseItem", data.inventory, data.item)
 end)
@@ -811,13 +803,12 @@ RegisterNUICallback("PlayDropFail", function(data, cb)
 end)
 
 function OpenTrunk()
-    Wait(500)
     local vehicle = QBCore.Functions.GetClosestVehicle()
     while (not HasAnimDictLoaded("amb@prop_human_bum_bin@idle_b")) do
         RequestAnimDict("amb@prop_human_bum_bin@idle_b")
         Citizen.Wait(100)
     end
-    --TaskPlayAnim(PlayerPedId(), "amb@prop_human_bum_bin@idle_b", "idle_d", 4.0, 4.0, -1, 50, 0, false, false, false)
+    TaskPlayAnim(PlayerPedId(), "amb@prop_human_bum_bin@idle_b", "idle_d", 4.0, 4.0, -1, 50, 0, false, false, false)
     if (IsBackEngine(GetEntityModel(vehicle))) then
         SetVehicleDoorOpen(vehicle, 4, false, false)
     else
