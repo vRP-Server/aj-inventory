@@ -1,12 +1,11 @@
-# aj-inventory
-
-* if you used qb-inventory before switching to this you dont need the SQL
-* Make sure to rename qb-inventory to aj-inventory in qb-shops fxmanifest.lua or it may not work
-
 ## IMPORTANT
-#### if your getting `attempt to index a nil value (global 'QBCore')`
+* Dont rename or it WILL NOT WORK
+* if you used [qb-inventory](https://github.com/qbcore-framework/qb-inventory) before switching to this you dont need the SQL
+## if your getting `attempt to index a nil value (global 'QBCore')`
 
-* Update your qb-core lol
+* Update your [qb-core](https://github.com/qbcore-framework/qb-core), I am currently only supporting current [qb-core](https://github.com/qbcore-framework/qb-core) builds
+
+### Images
 
 ![20210730073347_1](https://user-images.githubusercontent.com/66404074/127647862-aae0be99-a792-4995-b197-19fb5226c07c.jpg)
 ![20210730073426_1](https://user-images.githubusercontent.com/66404074/127647876-c8a27e01-9025-4328-927c-af460857d89a.jpg)
