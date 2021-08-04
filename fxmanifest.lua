@@ -26,3 +26,5 @@ files {
 	'html/attachment_images/*.png',
 	'html/*.ttf',
 }
+
+provide 'qb-inventory'
