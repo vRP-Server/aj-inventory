@@ -1,4 +1,5 @@
 ## IMPORTANT
+* In the fx.manifest of qb-shops you need to rename it to aj-inventory insted of qb-inventory (I thought I fixed this sorry)
 * Dont rename or it WILL NOT WORK
 * if you used [qb-inventory](https://github.com/qbcore-framework/qb-inventory) before switching to this you dont need the SQL
 ## if your getting `attempt to index a nil value (global 'QBCore')`
