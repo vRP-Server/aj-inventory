@@ -340,6 +340,7 @@ RegisterNetEvent("inventory:client:OpenInventory")
 AddEventHandler("inventory:client:OpenInventory", function(PlayerAmmo, inventory, other)
     if not IsEntityDead(PlayerPedId()) then
         ToggleHotbar(false)
+        TriggerEvent('randPickupAnim')
         SetNuiFocus(true, true)
         if other ~= nil then
             currentOtherInventory = other.name

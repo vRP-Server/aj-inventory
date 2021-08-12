@@ -5,7 +5,7 @@ description 'aj-inventory'
 version '1.0.0'
 
 shared_scripts { 
-	'config.lua'
+	'config.lua',
 	'@qb-core/import.lua',
 	'@qb-weapons/config.lua'
 }
