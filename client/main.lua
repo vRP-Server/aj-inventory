@@ -118,6 +118,11 @@ Citizen.CreateThread(function()
     end
 end)
 
+-- CloseInventory very rare if scuff 
+RegisterCommand('closeinv', function()
+    closeInventory()
+end, false)
+
 -- Inventory Main Thread
 RegisterCommand('inventory', function()
     if not isCrafting then
@@ -775,6 +780,12 @@ function IsBackEngine(vehModel)
         end
     end
     return false
+end
+
+function closeInventory()
+    SendNUIMessage({
+        action = "close",
+    })
 end
 
 function ToggleHotbar(toggle)
