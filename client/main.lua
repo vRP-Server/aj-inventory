@@ -489,7 +489,7 @@ AddEventHandler("inventory:client:PickupSnowballs", function()
     local ped = PlayerPedId()
     LoadAnimDict('anim@mp_snowball')
     TaskPlayAnim(ped, 'anim@mp_snowball', 'pickup_snowball', 3.0, 3.0, -1, 0, 1, 0, 0, 0)
-    QBCore.Functions.Progressbar("pickupsnowball", "Sneeuwballen oprapen..", 1500, false, true, {
+    QBCore.Functions.Progressbar("pickupsnowball", "Grabbing a snowball..", 1500, false, true, {
         disableMovement = true,
         disableCarMovement = true,
         disableMouse = false,
