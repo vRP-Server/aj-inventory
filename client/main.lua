@@ -105,7 +105,7 @@ Citizen.CreateThread(function()
                     if (IsBackEngine(GetEntityModel(vehicle))) then
                         drawpos = GetOffsetFromEntityInWorldCoords(vehicle, 0, 2.5, 0)
                     end
-                    QBCore.Functions.DrawText3D(drawpos.x, drawpos.y, drawpos.z, "Trunk")
+                    DrawText3Ds(drawpos.x, drawpos.y, drawpos.z, "Trunk")
                     if #(pos - drawpos) < 2.0 and not IsPedInAnyVehicle(ped) then
                         CurrentVehicle = GetVehicleNumberPlateText(vehicle)
                         showTrunkPos = false
@@ -125,7 +125,7 @@ end, false)
 
 -- Inventory Main Thread
 RegisterCommand('inventory', function()
-    if not isCrafting then
+    if not isCrafting and not inInventory then
         QBCore.Functions.GetPlayerData(function(PlayerData)
             if not PlayerData.metadata["isdead"] and not PlayerData.metadata["inlaststand"] and not PlayerData.metadata["ishandcuffed"] and not IsPauseMenuActive() then
                 local ped = PlayerPedId()
@@ -320,11 +320,6 @@ Citizen.CreateThread(function()
     end
 end)
 
-RegisterNetEvent("QBCore:Client:OnPlayerLoaded")
-AddEventHandler("QBCore:Client:OnPlayerLoaded", function()
-    --TriggerServerEvent("inventory:server:LoadDrops")
-end)
-
 RegisterNetEvent('inventory:server:RobPlayer')
 AddEventHandler('inventory:server:RobPlayer', function(TargetId)
     SendNUIMessage({
@@ -489,7 +484,7 @@ AddEventHandler("inventory:client:PickupSnowballs", function()
     local ped = PlayerPedId()
     LoadAnimDict('anim@mp_snowball')
     TaskPlayAnim(ped, 'anim@mp_snowball', 'pickup_snowball', 3.0, 3.0, -1, 0, 1, 0, 0, 0)
-    QBCore.Functions.Progressbar("pickupsnowball", "Grabbing a snowball..", 1500, false, true, {
+    QBCore.Functions.Progressbar("pickupsnowball", "Collecting snowballs..", 1500, false, true, {
         disableMovement = true,
         disableCarMovement = true,
         disableMouse = false,
