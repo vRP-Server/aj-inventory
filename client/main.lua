@@ -1,5 +1,5 @@
-inInventory = false
-hotbarOpen = false
+local inInventory = false
+local hotbarOpen = false
 
 local inventoryTest = {}
 local currentWeapon = nil
@@ -202,6 +202,18 @@ RegisterCommand('inventory', function()
                     elseif GetVehicleClass(curVeh) == 12 then
                         maxweight = 120000
                         slots = 35
+		    elseif GetVehicleClass(curVeh) == 13 then
+                        maxweight = 0
+                        slots = 0
+                    elseif GetVehicleClass(curVeh) == 14 then
+                        maxweight = 120000
+                        slots = 50
+                    elseif GetVehicleClass(curVeh) == 15 then
+                        maxweight = 120000
+                        slots = 50
+                    elseif GetVehicleClass(curVeh) == 16 then
+                        maxweight = 120000
+                        slots = 50
                     else
                         maxweight = 60000
                         slots = 35
@@ -537,7 +549,7 @@ AddEventHandler("inventory:client:UseWeapon", function(weaponData, shootbool)
             if weaponName == "weapon_petrolcan" or weaponName == "weapon_fireextinguisher" then 
                 ammo = 4000 
             end
-            GiveWeaponToPed(ped, GetHashKey(weaponName), ammo, false, false)
+            GiveWeaponToPed(ped, GetHashKey(weaponName), 0, false, false)
             SetPedAmmo(ped, GetHashKey(weaponName), ammo)
             SetCurrentPedWeapon(ped, GetHashKey(weaponName), true)
             if weaponData.info.attachments ~= nil then
