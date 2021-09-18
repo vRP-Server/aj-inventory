@@ -1,20 +1,7 @@
 ## IMPORTANT
 * In the fx.manifest of qb-shops you need to replace qb-inventory with aj-inventory (I thought I fixed this sorry)
-* Dont rename the folder or it WILL NOT WORK
+* Dont rename the folder to anything other then `aj-inventory` or it WILL NOT WORK
 * if you used [qb-inventory](https://github.com/qbcore-framework/qb-inventory) before switching to this you dont need the SQL
-## if your getting `attempt to index a nil value (global 'QBCore')`
-
-* Update your [qb-core](https://github.com/qbcore-framework/qb-core), I am currently only supporting current [qb-core](https://github.com/qbcore-framework/qb-core) builds
-
-### Images
-
-![20210730073347_1](https://user-images.githubusercontent.com/66404074/127647862-aae0be99-a792-4995-b197-19fb5226c07c.jpg)
-![20210730073426_1](https://user-images.githubusercontent.com/66404074/127647876-c8a27e01-9025-4328-927c-af460857d89a.jpg)
-![20210730073506_1](https://user-images.githubusercontent.com/66404074/127647883-b0972844-ceda-4432-8488-369b2f9749d2.jpg)
-![20210730073546_1](https://user-images.githubusercontent.com/66404074/127647889-23626abe-2868-4523-950a-74ef5efa21f4.jpg)
-![20210730073711_1](https://user-images.githubusercontent.com/66404074/127647899-17153f27-b218-46c3-bde0-4a58dcd70d75.jpg)
-![20210730073840_1](https://user-images.githubusercontent.com/66404074/127647919-3ddea98d-b1e1-4e10-af6e-4de1d8e41312.jpg)
-
 
 ## Features
 
@@ -26,6 +13,15 @@
 * Weapon serial number
 * Shops
 * Item Drops
+
+### Images
+
+![20210730073347_1](https://user-images.githubusercontent.com/66404074/127647862-aae0be99-a792-4995-b197-19fb5226c07c.jpg)
+![20210730073426_1](https://user-images.githubusercontent.com/66404074/127647876-c8a27e01-9025-4328-927c-af460857d89a.jpg)
+![20210730073506_1](https://user-images.githubusercontent.com/66404074/127647883-b0972844-ceda-4432-8488-369b2f9749d2.jpg)
+![20210730073546_1](https://user-images.githubusercontent.com/66404074/127647889-23626abe-2868-4523-950a-74ef5efa21f4.jpg)
+![20210730073711_1](https://user-images.githubusercontent.com/66404074/127647899-17153f27-b218-46c3-bde0-4a58dcd70d75.jpg)
+![20210730073840_1](https://user-images.githubusercontent.com/66404074/127647919-3ddea98d-b1e1-4e10-af6e-4de1d8e41312.jpg)
 
 ## Installation
 ### Manual
