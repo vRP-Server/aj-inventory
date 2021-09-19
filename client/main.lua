@@ -379,7 +379,7 @@ function GetClosestPlayer()
     for i=1, #closestPlayers, 1 do
         if closestPlayers[i] ~= PlayerId() then
             local pos = GetEntityCoords(GetPlayerPed(closestPlayers[i]))
-            local distance = GetDistanceBetweenCoords(pos.x, pos.y, pos.z, coords.x, coords.y, coords.z, true)
+            local distance = #(vector3(pos.x, pos.y, pos.z) - vector3(coords.x, coords.y, coords.z))
 
             if closestDistance == -1 or closestDistance > distance then
                 closestPlayer = closestPlayers[i]
@@ -400,7 +400,7 @@ RegisterNUICallback("GiveItem", function(data, cb)
                 local playerId = GetPlayerServerId(player)
                 local plyCoords = GetEntityCoords(playerPed)
                 local pos = GetEntityCoords(GetPlayerPed(-1))
-                local dist = GetDistanceBetweenCoords(pos.x, pos.y, pos.z, plyCoords.x, plyCoords.y, plyCoords.z, true)
+                local dist = #(vector3(pos.x, pos.y, pos.z) - vector3(plyCoords.x, plyCoords.y, plyCoords.z))
                 if dist < 2.5 and not PlayerData.metadata["isdead"] and not PlayerData.metadata["inlaststand"] and not PlayerData.metadata["ishandcuffed"] and not IsPauseMenuActive() then --checks what the player is doing
                     SetCurrentPedWeapon(PlayerPedId(),'WEAPON_UNARMED',true)
                     TriggerEvent('animations:client:EmoteCommandStart', {"point"})
