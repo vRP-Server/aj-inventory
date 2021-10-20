@@ -23,6 +23,8 @@ Config.RandomInt = function(length)
 	end
 end
 
+Config.NormalIDCard = true -- Make this false if you use the "qb-idcard" script -- https://github.com/alp1x/qb-idcard
+
 Config.VendingObjects = {
     "prop_vend_soda_01",
     "prop_vend_soda_02",
