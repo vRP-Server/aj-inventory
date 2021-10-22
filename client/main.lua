@@ -825,3 +825,12 @@ function LoadAnimDict( dict )
         Citizen.Wait( 5 )
     end
 end
+
+RegisterNetEvent('qb-casino:client:openCasinoMembersips')
+AddEventHandler('qb-casino:client:openCasinoMembersips', function()
+    local ShopItems = {}
+    ShopItems.label = "Diamond Casino Memberships"
+    ShopItems.items = Config.CasinoMemberships
+    ShopItems.slots = #Config.CasinoMemberships
+    TriggerServerEvent("inventory:server:OpenInventory", "shop", "Vendingshop_", ShopItems)
+end)
