@@ -1470,6 +1470,10 @@ QBCore.Commands.Add("giveitem", "Give An Item (Admin Only)", {{name="id", help="
 				        info.lastname = Player.PlayerData.charinfo.lastname
 				        info.birthdate = Player.PlayerData.charinfo.birthdate
 				        info.type = "Class C Driver License"
+				elseif itemData["name"] == "weaponlicense" then
+					info.firstname = Player.PlayerData.charinfo.firstname
+					info.lastname = Player.PlayerData.charinfo.lastname
+					info.birthdate = Player.PlayerData.charinfo.birthdate
 				elseif itemData["type"] == "weapon" then
 					amount = 1
 					info.serie = tostring(Config.RandomInt(2) .. Config.RandomStr(3) .. Config.RandomInt(1) .. Config.RandomStr(2) .. Config.RandomInt(3) .. Config.RandomStr(4))
