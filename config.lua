@@ -392,3 +392,16 @@ Config.MaximumAmmoValues = {
     ["shotgun"] = 200,
     ["rifle"] = 250,
 }
+
+Config.CasinoMemberships = {
+    [1] = { name = "member", price = 200000, amount = 10, info = {}, type = "item", slot = 1 },
+    [2] = { name = "vip",    price = 300000, amount = 10, info = {}, type = "item", slot = 2 }
+}
+
+Config.CasinoChips = {
+    [1] = { name = "whitechip", price = 1, amount = 10000000, info = {}, type = "item", slot = 1 },
+    [2] = { name = "redchip", price = 5, amount = 10000000, info = {}, type = "item", slot = 2 },
+    [3] = { name = "bluechip", price = 10, amount = 10000000, info = {}, type = "item", slot = 3 },
+    [4] = { name = "blackchip", price = 50, amount = 10000000, info = {}, type = "item", slot = 4 },
+    [5] = { name = "goldchip", price = 100, amount = 10000000, info = {}, type = "item", slot = 5 }
+}

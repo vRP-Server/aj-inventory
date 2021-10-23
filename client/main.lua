@@ -832,5 +832,14 @@ AddEventHandler('qb-casino:client:openCasinoMembersips', function()
     ShopItems.label = "Diamond Casino Memberships"
     ShopItems.items = Config.CasinoMemberships
     ShopItems.slots = #Config.CasinoMemberships
-    TriggerServerEvent("inventory:server:OpenInventory", "shop", "Vendingshop_", ShopItems)
+    TriggerServerEvent("inventory:server:OpenInventory", "shop", "casino_", ShopItems)
+end)
+
+RegisterNetEvent('qb-casino:client:openCasinoChips')
+AddEventHandler('qb-casino:client:openCasinoChips', function()
+    local ShopItems = {}
+    ShopItems.label = "Diamond Casino Chips"
+    ShopItems.items = Config.CasinoChips
+    ShopItems.slots = #Config.CasinoChips
+    TriggerServerEvent("inventory:server:OpenInventory", "shop", "casino2_", ShopItems)
 end)
